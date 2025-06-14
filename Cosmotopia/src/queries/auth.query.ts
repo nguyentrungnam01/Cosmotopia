@@ -51,6 +51,7 @@ export const useRegister = () => {
     }
   });
 };
+
 export const useOTP = () => {
   return useMutation({
     mutationKey: ['register'],
@@ -59,6 +60,16 @@ export const useOTP = () => {
     }
   });
 };
+
+export const useUpdateAddress = () => {
+  return useMutation({
+    mutationKey: ['update_address'],
+    mutationFn: async (model: any) => {
+      return await BaseRequest.Put(`/api/User/update-address`, model);
+    }
+  });
+};
+
 // export const useForgotPassWord = () => {
 //   return useMutation({
 //     mutationKey: ['register'],

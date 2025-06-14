@@ -10,7 +10,7 @@ const menuItems = [
     items: [
       { id: 'profile', title: 'Hồ sơ', to: '/profile' },
       // { id: 'payment', title: 'Thanh toán', to: '/profile/payment' },
-      // { id: 'address', title: 'Địa chỉ', to: '/profile/address' },
+      { id: 'address', title: 'Địa chỉ', to: '/profile/address' },
       { id: 'password', title: 'Đổi mật khẩu', to: '/profile/password' }
     ]
   },
@@ -44,13 +44,12 @@ const menuItems = [
 ];
 
 export function ProfileSidebar() {
-  const isSelected = (item) => {
-    const location = useLocation();
-    return location.pathname === item.to;
+  const location = useLocation();
+  const isSelected = (item, currentLocation) => {
+    return currentLocation.pathname === item.to;
   };
-  const isParentSelected = (menuItem) => {
-    const location = useLocation();
-    return menuItem.items.some((subItem) => location.pathname === subItem.to);
+  const isParentSelected = (menuItem, currentLocation) => {
+    return menuItem.items.some((subItem) => currentLocation.pathname === subItem.to);
   };
   return (
     <div className="w-full space-y-3 font-montserrat">
@@ -63,7 +62,7 @@ export function ProfileSidebar() {
                 <span
                   className={cn(
                     'text-base font-normal',
-                    isParentSelected(item)
+                    isParentSelected(item, location)
                       ? 'bg-gradient-to-r from-[#9C3CFD] to-[#BF38FF] bg-clip-text text-transparent'
                       : 'text-[#4E4663]/80 hover:text-[#4E4663]'
                   )}
@@ -78,7 +77,7 @@ export function ProfileSidebar() {
                     to={subItem.to}
                     className={cn(
                       'flex items-center gap-3 text-base font-normal transition-colors duration-200',
-                      isSelected(subItem)
+                      isSelected(subItem, location)
                         ? 'bg-gradient-to-r from-[#9C3CFD] to-[#BF38FF] bg-clip-text text-transparent'
                         : 'text-[#4E4663]/80 hover:text-[#4E4663]'
                     )}
@@ -97,7 +96,7 @@ export function ProfileSidebar() {
               <span
                 className={cn(
                   'text-base font-normal',
-                  isSelected(item) &&
+                  isSelected(item, location) &&
                     'bg-gradient-to-r from-[#9C3CFD] to-[#BF38FF] bg-clip-text text-transparent'
                 )}
               >
