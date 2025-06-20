@@ -13,7 +13,7 @@ export default function MakeupTones() {
   
     return (
       <div className="flex justify-center p-6">
-        <div className="bg-gray-100 rounded-3xl shadow-lg p-6 w-[90%] max-w-4xl">
+        <div className="bg-gray-100 rounded-3xl shadow-lg p-6 w-[70%]">
           <h2 className="text-2xl font-bold text-center text-gray-800 mb-4">
             Tone trang điểm phổ biến
           </h2>

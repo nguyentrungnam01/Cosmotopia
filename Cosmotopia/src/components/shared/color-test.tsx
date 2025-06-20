@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card"
 export default function ColorTest() {
   return (
     <div className="container mx-auto px-4 py-16">
-      <Card className="relative w-full max-w-[1104px] mx-auto p-8 rounded-[32px] bg-white shadow-[0px_8px_60px_rgba(157,18,223,0.15)]">
+      <Card className="relative w-full max-w-[1604px] mx-auto p-8 rounded-[32px] bg-white shadow-[0px_8px_60px_rgba(157,18,223,0.15)]">
         <div className="grid lg:grid-cols-2 gap-8 items-center">
           {/* Left side - Images */}
           <div className="relative">

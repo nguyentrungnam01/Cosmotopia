@@ -4,9 +4,9 @@ import { toast } from '@/components/ui/use-toast';
 import __helpers from '../helpers';
 import { message } from 'antd';
 
-const baseURL =
-  'https://cosmetics20250328083913-ajfsa0cegrdggzej.southeastasia-01.azurewebsites.net/';
-// const baseURL = 'https://localhost:7191/';
+// const baseURL =
+  // 'https://cosmetics20250328083913-ajfsa0cegrdggzej.southeastasia-01.azurewebsites.net/';
+const baseURL = 'https://localhost:7191/';
 const token = helpers.cookie_get('AT');
 // const refreshToken = helpers.cookie_get('RT');
 
@@ -83,7 +83,7 @@ var BaseRequest = {
       console.log('response', response);
       return response;
     } catch (err) {
-      message.error(err?.title);
+      message;
     }
   },
   PostWithoutCatch: async (url: string, data?: any) => {

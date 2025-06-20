@@ -1,4 +1,6 @@
 import { api } from '@/config/axios.config';
+import BaseRequest from '@/config/axios.config';
+import { useMutation } from '@tanstack/react-query';
 
 export const forgotPassword = (email) =>
   api.post('api/User/forgotpassword', { email: email });
@@ -17,5 +19,36 @@ export const postOrder = (model) => api.post(`/api/Order`, model);
 export const postPayment = (model) =>
   api.post(`/api/Payment/create-payment`, model);
 export const getTransactions = (id) => api.get(`/api/Payment/payment/${id}`);
-export const HandleTransactions = (id, status) =>
+export const handleTransactions = (id, status) =>
   api.put(`/api/Payment/update-payment-status/${id}?newStatus=${status}`);
+interface OrderPayload {
+  orderDetails: { productId: string; quantity: number }[];
+  address: string;
+  paymentMethod: string;
+}
+
+export function usePostOrder() {
+  return useMutation({
+    mutationKey: ['post_order'],
+    mutationFn: async (data: OrderPayload) => {
+      return BaseRequest.PostWithOutResponse('/api/Order', data);
+    }
+  });
+}
+
+interface PaymentLinkPayload {
+  orderId: string;
+  amount: number;
+  returnUrl: string;
+  paymentMethod: string;
+}
+
+export function useCreatePaymentLink() {
+  return useMutation({
+    mutationKey: ['create_payment_link'],
+    mutationFn: async (data: PaymentLinkPayload) => {
+      return BaseRequest.PostWithOutResponse('/api/Payment/create-payment-link', data);
+    }
+  });
+}
+

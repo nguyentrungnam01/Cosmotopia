@@ -2,23 +2,25 @@ import BasePages from '@/components/shared/base-pages.js';
 import OrderInfo from './OrderInfo';
 import { MapPin } from 'lucide-react';
 import PaymentMethods from './PaymentMethod';
-import { getAccountSelf, postOrder, postPayment } from '@/queries/user.api';
+import { getAccountSelf } from '@/queries/user.api';
+import { usePostOrder, useCreatePaymentLink } from '@/queries/user.api';
 import { useEffect, useState } from 'react';
-import { Button, Form, Input, message, Modal, Select } from 'antd';
-import axios from 'axios';
+import { Button, Form, Input, message, Modal, Select, Spin } from 'antd';
 import { dataAddressJSOn } from '@/store/dataAddress';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { sSpin } from '@/store/spin';
 
 export default function Payment() {
   const location = useLocation();
-  const products = location.state;
-  const navigate = useNavigate();
-  console.log(products);
+  const products = location.state as any[];
 
-  const [user, setUser] = useState(null);
-  const [selectedDistrict, setSelectedDistrict] = useState(null);
-  const [selectedWard, setSelectedWard] = useState(null);
+  // React-Query mutations
+  const postOrderMutation = usePostOrder();
+  const createLinkMutation = useCreatePaymentLink();
+
+  const [user, setUser] = useState<any>(null);
+  const [selectedDistrict, setSelectedDistrict] = useState<string | null>(null);
+  const [selectedWard, setSelectedWard] = useState<string | null>(null);
   const [address, setAddress] = useState({
     district: 'Thành phố Thủ Đức',
     ward: 'Phường Long Thạnh Mỹ',
@@ -26,234 +28,196 @@ export default function Payment() {
   });
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
-  const onFinish = (values) => {
-    console.log(selectedDistrict, selectedWard);
-    const modelAdress = {
-      district: values.district,
-      ward: values.ward,
-      house: values.house
-    };
-    setAddress(modelAdress);
-    setVisible(false);
-  };
+
   const textAddress = `${address.house}, ${address.ward}, ${address.district}, TPHCM`;
-  const PostOrder = () => {
+
+  const handlePlaceOrder = async () => {
     sSpin.set(true);
-    const model = {
-      orderDetails: products.map((product) => ({
-        productId: product.productId,
-        quantity: product.quantity
-      })),
-      address: textAddress,
-      paymentMethod: 'payment'
-    };
-    console.log(model);
-    postOrder(model)
-      .then((order) => {
-        console.log(order);
-        const modelPayemnt = {
-          orderId: order.orderId,
-          amount: order.totalAmount,
-          returnUrl: '',
-          paymentMethod: 'Vnpay'
-        };
-        postPayment(modelPayemnt).then((data) => {
-          navigate('/success', {
-            state: {
-              type: 'Đặt hàng',
-              url: data.paymentUrl
-            }
-          });
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        sSpin.set(false);
-      });
+    try {
+      const orderPayload = {
+        orderDetails: products.map((p) => ({
+          productId: p.productId,
+          quantity: p.quantity
+        })),
+        address: textAddress,
+        paymentMethod: 'Credit Card'
+      };
+      const order = await postOrderMutation.mutateAsync(orderPayload);
+      console.log(order);
+
+      const modelPayment = {
+        orderId: order?.orderId,
+        amount: order?.totalAmount,
+        returnUrl: '',
+        paymentMethod: 'PayOS'
+      }
+
+      const payment = await createLinkMutation.mutateAsync(modelPayment);
+
+      console.log("Payment Detail: ", payment);
+
+      //Redirect
+      window.location.href = payment.paymentUrl;
+    } catch (err: any) {
+      console.error(err);
+      message.error(
+        err?.message ||
+        'Có lỗi xảy ra khi tạo đơn hoặc chuyển sang PayOS.'
+      );
+    } finally {
+      sSpin.set(false);
+    }
   };
+
   useEffect(() => {
-    console.log('dknn');
-    console.log(dataAddressJSOn.districts);
     getAccountSelf()
-      .then((data) => {
-        console.log(data);
-        setUser(data?.data);
-      })
-      .catch((err) => console.log(err));
+      .then(({ data }) => setUser(data))
+      .catch(console.error);
   }, []);
+
   useEffect(() => {
     if (visible) {
+      form.setFieldsValue(address);
       setSelectedDistrict(address.district);
       setSelectedWard(address.ward);
-      form.setFieldsValue({
-        house: address.house,
-        district: address.district,
-        ward: address.ward
-      });
     }
   }, [visible]);
-  const handleCancel = () => {
+
+  const onFinishAddress = (vals: any) => {
+    setAddress(vals);
     setVisible(false);
+  };
+  const handleCancel = () => {
     form.resetFields();
+    setVisible(false);
   };
 
-  return (
-    <>
-      <BasePages className="relative mx-auto max-h-screen w-[80%] p-4">
-        <h2 className="mb-8 ml-4 bg-gradient-to-r from-[#936EFF] to-[#936EFF] bg-clip-text   font-montserrat text-2xl text-3xl font-bold capitalize text-[#3D3D3D] text-transparent">
-          Xem trước thông tin đơn hàng
-        </h2>
-        <div className="mb-8 flex  w-full items-start justify-between gap-10">
-          <div className="flex w-2/5 min-w-[400px] flex-col gap-5">
-            <OrderInfo />
-          </div>
-          <div className="flex w-4/5 flex-col gap-5 rounded-md">
-            <div className="flex h-2/5 flex-row rounded-md bg-white p-5 shadow-lg ">
-              <div className="flex w-full flex-col">
-                <div className="flex w-full flex-row items-center gap-3">
-                  <div className="flex h-7 w-7 items-center justify-center">
-                    <MapPin className="h-5 w-5 stroke-[1.5px] text-[#4E4663]" />
-                  </div>
-                  <span className="font-montserrat text-[22px] font-medium text-[#4E4663]">
-                    Địa chỉ
-                  </span>
-                </div>
+  const isLoading =
+    postOrderMutation.isLoading || createLinkMutation.isLoading;
 
-                <div className="flex w-full flex-row items-center justify-between">
-                  <div className="flex flex-col gap-0.5">
-                    <h3 className="font-montserrat text-[22px] font-normal text-[#4E4663]">
-                      {user?.firstName +
-                        ' ' +
-                        user?.lastName +
-                        ' ' +
-                        user?.phone}
-                    </h3>
-                    <p className="font-montserrat text-base font-normal text-[#837D92]">
-                      {textAddress}
-                    </p>
-                  </div>
-                  <button
-                    className="font-montserrat text-lg font-normal text-[#936EFF]"
-                    onClick={() => setVisible(true)}
-                  >
-                    Thay đổi
-                  </button>
+  return (
+    <BasePages className="relative mx-auto max-h-screen w-[80%] p-4">
+      <h2 className="mb-8 ml-4 font-montserrat text-3xl font-bold text-[#3D3D3D]">
+        Xem trước thông tin đơn hàng
+      </h2>
+
+      <div className="mb-8 flex w-full items-start justify-between gap-10">
+        <div className="flex w-2/5 min-w-[400px] flex-col gap-5">
+          <OrderInfo />
+        </div>
+
+        <div className="flex w-4/5 flex-col gap-5">
+          {/* Địa chỉ */}
+          <div className="flex rounded-md bg-white p-5 shadow-lg">
+            <div className="flex w-full flex-col">
+              <div className="flex items-center gap-3">
+                <MapPin className="h-5 w-5 text-[#4E4663]" />
+                <span className="font-montserrat text-2xl text-[#4E4663]">
+                  Địa chỉ
+                </span>
+              </div>
+              <div className="mt-4 flex items-center justify-between">
+                <div>
+                  <h3 className="font-montserrat text-xl text-[#4E4663]">
+                    {user
+                      ? `${user.firstName} ${user.lastName} – ${user.phone}`
+                      : '…'}
+                  </h3>
+                  <p className="font-montserrat text-base text-[#837D92]">
+                    {textAddress}
+                  </p>
                 </div>
+                <button
+                  className="font-montserrat text-lg text-[#936EFF]"
+                  onClick={() => setVisible(true)}
+                >
+                  Thay đổi
+                </button>
               </div>
             </div>
-            <div className="flex h-4/5 flex-row rounded-md bg-white p-5 shadow-lg">
-              <PaymentMethods ConfirmPayMent={PostOrder} />
-            </div>
+          </div>
+
+          {/* Phương thức thanh toán */}
+          <div className="flex rounded-md bg-white p-5 shadow-lg">
+            <PaymentMethods ConfirmPayMent={handlePlaceOrder} />
           </div>
         </div>
-        <Modal
-          title="Chọn địa chỉ"
-          open={visible}
-          onCancel={handleCancel}
-          footer={
-            <>
-              <Button key="back" onClick={handleCancel}>
-                Cancel
-              </Button>
-              ,
-              <Button
-                type="primary"
-                onClick={() => {
-                  form.submit();
-                }}
-              >
-                Confirm
-              </Button>
-            </>
-          }
-        >
-          <Form layout="vertical" form={form} onFinish={onFinish}>
-            <Form.Item
-              rules={[
-                {
-                  required: true,
-                  message: ''
-                }
-              ]}
-              label="Thành phố"
-            >
-              <Select disabled placeholder="Chọn quận/huyện" value={'TPHCM'} />
-            </Form.Item>
-            <Form.Item
-              name="district"
-              rules={[
-                {
-                  required: true,
-                  message: ''
-                }
-              ]}
-              label="Quận/Huyện"
-              required
-            >
-              <Select
-                placeholder="Chọn quận/huyện"
-                onChange={(value) => {
-                  setSelectedDistrict(value);
-                  form.setFieldValue('ward', null); // Reset phường khi đổi quận
-                }}
-              >
-                {dataAddressJSOn.districts.map((district) => (
-                  <Select.Option key={district.code} value={district.name}>
-                    {district.name}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
+      </div>
 
-            {/* Chọn Phường/Xã */}
-            <Form.Item
-              rules={[
-                {
-                  required: true,
-                  message: ''
-                }
-              ]}
-              name="ward"
-              label="Phường/Xã"
-              required
-            >
-              <Select
-                placeholder="Chọn phường/xã"
-                value={selectedWard}
-                // onChange={(value) => setSelectedWard(value)}
-                disabled={!selectedDistrict}
-              >
-                {selectedDistrict &&
-                  dataAddressJSOn.districts
-                    .find((d) => d.name === selectedDistrict)
-                    ?.wards.map((ward) => (
-                      <Select.Option key={ward.code} value={ward.name}>
-                        {ward.name}
-                      </Select.Option>
-                    ))}
-              </Select>
-            </Form.Item>
+      {isLoading && (
+        <div className="flex justify-center py-4">
+          <Spin />
+        </div>
+      )}
 
-            {/* Nhập số nhà */}
-            <Form.Item
-              rules={[
-                {
-                  required: true,
-                  message: ''
-                }
-              ]}
-              label="Số nhà, đường"
-              name="house"
-              required
+      {/* Modal chọn địa chỉ */}
+      <Modal
+        title="Chọn địa chỉ"
+        open={visible}
+        onCancel={handleCancel}
+        footer={[
+          <Button key="back" onClick={handleCancel}>
+            Hủy
+          </Button>,
+          <Button key="submit" type="primary" onClick={() => form.submit()}>
+            Xác nhận
+          </Button>
+        ]}
+      >
+        <Form layout="vertical" form={form} onFinish={onFinishAddress}>
+          <Form.Item label="Thành phố">
+            <Select disabled value="TPHCM" />
+          </Form.Item>
+
+          <Form.Item
+            name="district"
+            label="Quận/Huyện"
+            rules={[{ required: true }]}
+          >
+            <Select
+              placeholder="Chọn quận/huyện"
+              onChange={(val) => {
+                setSelectedDistrict(val);
+                form.setFieldValue('ward', null);
+              }}
             >
-              <Input placeholder="Nhập số nhà, tên đường" />
-            </Form.Item>
-          </Form>
-        </Modal>
-        {/* <Footer /> */}
-      </BasePages>
-    </>
+              {dataAddressJSOn.districts.map((d) => (
+                <Select.Option key={d.code} value={d.name}>
+                  {d.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            name="ward"
+            label="Phường/Xã"
+            rules={[{ required: true }]}
+          >
+            <Select
+              placeholder="Chọn phường/xã"
+              disabled={!selectedDistrict}
+            >
+              {selectedDistrict &&
+                dataAddressJSOn.districts
+                  .find((d) => d.name === selectedDistrict)!
+                  .wards.map((w) => (
+                    <Select.Option key={w.code} value={w.name}>
+                      {w.name}
+                    </Select.Option>
+                  ))}
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            name="house"
+            label="Số nhà, đường"
+            rules={[{ required: true }]}
+          >
+            <Input placeholder="Nhập số nhà, tên đường" />
+          </Form.Item>
+        </Form>
+      </Modal>
+    </BasePages>
   );
 }
