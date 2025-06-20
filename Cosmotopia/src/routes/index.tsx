@@ -39,6 +39,7 @@ import { ChangePassWordPage } from '@/pages/ChangePassWordPage';
 import { Ballance } from '@/pages/KOLPage/Ballance/Ballance';
 import { Withdraw } from '@/pages/AdminPage/WithDraw/Withdraw';
 import HandlePayment from '@/pages/Payment/HandlePayment';
+const AddressPage = lazy(() => import('@/pages/ProfilePage/AddressPage'));
 
 // ----------------------------------------------------------------------
 
@@ -50,8 +51,9 @@ import HandlePayment from '@/pages/Payment/HandlePayment';
 // case 5: return "Shipper Staff";
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const token = helper.cookie_get('AT');
-  const userObject = token
-    ? JSON.parse(helper.cookie_get('user'))
+  const userCookie = helper.cookie_get('user');
+  const userObject = token && userCookie
+    ? JSON.parse(userCookie)
     : { role: 'Guest' };
   const userRole = userObject?.role;
 
@@ -195,7 +197,8 @@ export default function AppRouter() {
           index: true
         },
         { path: 'orders', element: <OrderTracking /> },
-        { path: 'password', element: <ChangePassWordPage /> }
+        { path: 'password', element: <ChangePassWordPage /> },
+        { path: 'address', element: <AddressPage /> }
       ]
     }
   ];
