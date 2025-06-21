@@ -135,7 +135,7 @@ export default function ProductDetail() {
   return (
     <BasePages
       className="relative mx-auto w-[80%] flex-1 p-4"
-      pageHead="Cosmotopia"
+      pageHead="Cosmo"
     >
       <div className="flex items-center gap-4 " style={{ height: '670px' }}>
         {/* Danh sách ảnh nhỏ */}

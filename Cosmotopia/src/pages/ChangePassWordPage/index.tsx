@@ -1,10 +1,10 @@
 import __helpers from '@/helpers';
-import { changePassword, resetPassword } from '@/queries/user.api';
+import { changePassword } from '@/queries/user.api';
 import { sSpin } from '@/store/spin';
 import { Form, message } from 'antd';
 import React, { FC } from 'react';
 
-export const ChangePassWordPage: FC = ({}) => {
+export const ChangePassWordPage: FC = ({ }) => {
   const token = __helpers.cookie_get('AT');
 
   const userObject = token
@@ -37,80 +37,94 @@ export const ChangePassWordPage: FC = ({}) => {
   };
   return (
     <>
-      <h2 className="mb-4">Đổi mật khẩu</h2>
-      <Form
-        name="basic"
-        className="w-full"
-        onFinish={onFinish}
-        autoComplete="off"
-        layout="vertical"
-      >
-        <Form.Item
-          label="Mật khẩu cũ"
-          name="oldPassword"
-          rules={[
-            {
-              required: true,
-              message: 'Please input old password!'
-            }
-          ]}
-        >
-          <input
-            type="password"
-            placeholder="Mật khẩu cũ"
-            className="w-full rounded-full bg-gray-50 py-3 pl-10 pr-4 text-sm transition-shadow focus:outline-none focus:ring-2 focus:ring-gray-200"
-          />
-        </Form.Item>
-        <Form.Item
-          label="Mật khẩu mới"
-          name="password"
-          rules={[
-            {
-              required: true,
-              message: 'Please input your password!'
-            }
-          ]}
-        >
-          <input
-            type="password"
-            placeholder="Mật khẩu mới"
-            className="w-full rounded-full bg-gray-50 py-3 pl-10 pr-4 text-sm transition-shadow focus:outline-none focus:ring-2 focus:ring-gray-200"
-          />
-        </Form.Item>
-        <Form.Item
-          label="Xác nhận mật khẩu"
-          name="confirmPassword"
-          rules={[
-            {
-              required: true,
-              message: 'Please confirm your password!'
-            },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue('password') === value) {
-                  return Promise.resolve();
+      <div className="p-5">
+        <div className="border-b border-gray-200/50 pb-4">
+          <h2 className="mb-4 font-montserrat text-xl font-bold text-[#4E4663]">Đổi mật khẩu</h2>
+          <Form
+            name="basic"
+            className="w-full font-montserrat"
+            onFinish={onFinish}
+            autoComplete="off"
+            layout="vertical"
+          >
+            <Form.Item
+              label="Mật khẩu cũ"
+              name="oldPassword"
+              className='text-sm text-[#4E4663]'
+              rules={[
+                {
+                  required: true,
+                  message: 'Please input old password!'
                 }
-                return Promise.reject(
-                  new Error('The new password that you entered do not match!')
-                );
-              }
-            })
-          ]}
-        >
-          <input
-            type="password"
-            placeholder="Nhập lại mật khẩu mới"
-            className="w-full rounded-full bg-gray-50 py-3 pl-10 pr-4 text-sm transition-shadow focus:outline-none focus:ring-2 focus:ring-gray-200"
-          />
-        </Form.Item>
+              ]}
+            >
+              <input
+                type="password"
+                placeholder="Mật khẩu cũ"
+                className="w-full rounded-full bg-gray-50 py-3 pl-10 pr-4 text-sm transition-shadow focus:outline-none focus:ring-2 focus:ring-gray-200"
+              />
+            </Form.Item>
+            <Form.Item
+              label="Mật khẩu mới"
+              name="password"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please input your password!'
+                }
+              ]}
+            >
+              <input
+                type="password"
+                placeholder="Mật khẩu mới"
+                className="w-full rounded-full bg-gray-50 py-3 pl-10 pr-4 text-sm transition-shadow focus:outline-none focus:ring-2 focus:ring-gray-200"
+              />
+            </Form.Item>
+            <Form.Item
+              label="Xác nhận mật khẩu"
+              name="confirmPassword"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please confirm your password!'
+                },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue('password') === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      new Error('The new password that you entered do not match!')
+                    );
+                  }
+                })
+              ]}
+            >
+              <input
+                type="password"
+                placeholder="Nhập lại mật khẩu mới"
+                className="w-full rounded-full bg-gray-50 py-3 pl-10 pr-4 text-sm transition-shadow focus:outline-none focus:ring-2 focus:ring-gray-200"
+              />
+            </Form.Item>
 
-        <button
+            {/* <button
           type="submit"
-          className=" from-blue-500 mb-2 w-40 rounded-full bg-gradient-to-r from-[#9C3CFD] to-[#BF38FF] px-6 py-3 text-base font-medium text-white transition-colors duration-200 hover:bg-[#9B22DB]"
+          className="rounded-full bg-gradient-to-r from-[#9C3CFD] to-[#BF38FF] px-8 py-3 font-bold text-white shadow-lg font-montserrat"
         >
           Xác nhận
-        </button>
-      </Form>
+        </button> */}
+
+            <div className="mt-8 flex justify-end">
+              <button
+                type="submit"
+                className="rounded-full bg-gradient-to-r from-[#9C3CFD] to-[#BF38FF] px-8 py-3 font-bold text-white shadow-lg"
+              >
+                Xác nhận
+              </button>
+            </div>
+          </Form>
+        </div>
+      </div>
     </>
   );
 };

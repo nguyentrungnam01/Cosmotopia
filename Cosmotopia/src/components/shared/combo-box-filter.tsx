@@ -70,7 +70,7 @@ const FrameworkPopover: React.FC<FrameworkPopoverProps> = ({
       </PopoverTrigger>
       <PopoverContent className="w-full p-0">
         <Command>
-          <CommandInput placeholder="Tìm kiếm..." />
+          <CommandInput placeholder="Tìm kiếm..." /> 
           <CommandList>
             <CommandEmpty>Không tìm thấy dữ liệu</CommandEmpty>
             <CommandGroup>

@@ -10,6 +10,7 @@ import { PagingModel } from '@/constants/data';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { sOpen } from '@/store/spin';
+
 interface DashboardNavProps {
   items: NavItem[];
   setOpen?: Dispatch<SetStateAction<boolean>>;
@@ -38,7 +39,7 @@ export default function HeaderNav({
   const auth = useSelector((state: RootState) => state.auth);
   const cart = useSelector((state: RootState) => state.cart.cartDetail);
   const isOpen = sOpen.use();
-  
+
 
   useEffect(() => {
     if (debouncedSearchTerm) {
@@ -60,7 +61,7 @@ export default function HeaderNav({
   if (!items?.length) {
     return null;
   }
-  
+
   return (
     <nav className={`relative ${isOpen ? "-z-20" : 'z-10'} border-b border-gray-200 drop-shadow-md`}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -83,7 +84,6 @@ export default function HeaderNav({
           </li>
           <li>
             <a
-              href="#"
               className="text-gray-600 transition-colors duration-200 hover:text-gray-900"
             >
               Top Reviews
@@ -91,8 +91,10 @@ export default function HeaderNav({
           </li>
           <li>
             <a
-              href="#"
-              className="text-gray-600 transition-colors duration-200 hover:text-gray-900"
+              onClick={() =>
+                router.push(`/scanner`)
+              }
+              className="text-gray-600 transition-colors duration-200 hover:text-gray-900 cursor-pointer"
             >
               Personal color test
             </a>

@@ -9,8 +9,11 @@ import { Button, Form, Input, message, Modal, Select, Spin } from 'antd';
 import { dataAddressJSOn } from '@/store/dataAddress';
 import { useLocation } from 'react-router-dom';
 import { sSpin } from '@/store/spin';
+import { useRouter } from '@/routes/hooks';
+
 
 export default function Payment() {
+  const router = useRouter();
   const location = useLocation();
   const products = location.state as any[];
 
@@ -57,7 +60,9 @@ export default function Payment() {
       console.log("Payment Detail: ", payment);
 
       //Redirect
-      window.location.href = payment.paymentUrl;
+      // window.location.href = payment.paymentUrl;
+      router.push('/success');
+      window.open(payment.paymentUrl, '_blank', 'noopener,noreferrer');
     } catch (err: any) {
       console.error(err);
       message.error(

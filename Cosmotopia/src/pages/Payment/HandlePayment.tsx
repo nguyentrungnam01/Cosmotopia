@@ -3,6 +3,8 @@ import BasePages from '@/components/shared/base-pages.js';
 import { useSearchParams } from 'react-router-dom';
 import { Result, Spin } from 'antd';
 import { getTransactions, handleTransactions } from '@/queries/user.api';
+import { useRouter } from '@/routes/hooks';
+
 
 interface ResultProps {
   status: 'success' | 'error';
@@ -11,16 +13,17 @@ interface ResultProps {
 }
 
 export default function HandlePayment() {
+  const router = useRouter();
   const [searchParams] = useSearchParams();
   const [resultProps, setResultProps] = useState<ResultProps | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const txnId        = searchParams.get('id');
-    const responseCode = searchParams.get('code');       
-    const cancelFlag   = searchParams.get('cancel');     
-    const statusParam  = searchParams.get('status');     
-    const orderCode    = searchParams.get('orderCode');
+    const txnId = searchParams.get('id');
+    const responseCode = searchParams.get('code');
+    const cancelFlag = searchParams.get('cancel');
+    const statusParam = searchParams.get('status');
+    const orderCode = searchParams.get('orderCode');
     console.log(txnId, responseCode, cancelFlag, statusParam, orderCode);
     if (!txnId) {
       setResultProps({
@@ -37,11 +40,11 @@ export default function HandlePayment() {
         console.log("Order Code: ", orderCode);
         const tx = await getTransactions(orderCode);
         console.log("Response Payment: ", tx);
-        const currentStatus = tx.status; 
+        const currentStatus = tx.status;
         console.log(currentStatus);
         console.log(statusParam);
         console.log(cancelFlag);
-         
+
         let finalResult: ResultProps;
 
         if (currentStatus === 0) {
@@ -67,27 +70,27 @@ export default function HandlePayment() {
               subTitle: `Giao dịch ${orderCode} không hoàn tất. Vui lòng thử lại.`
             };
           }
-        } 
+        }
         else if (currentStatus === 1) {
           finalResult = {
             status: 'success',
             title: 'Thanh toán thành công',
             subTitle: `Đơn hàng ${orderCode} đã được thanh toán!`
           };
-        } 
+        }
         else {
           const wasCancelled = cancelFlag === 'true' && statusParam === 'CANCELLED';
           finalResult = wasCancelled
             ? {
-                status: 'error',
-                title: 'Bạn đã hủy thanh toán',
-                subTitle: `Giao dịch ${orderCode} đã bị hủy.`
-              }
+              status: 'error',
+              title: 'Bạn đã hủy thanh toán',
+              subTitle: `Giao dịch ${orderCode} đã bị hủy.`
+            }
             : {
-                status: 'error',
-                title: 'Thanh toán không thành công',
-                subTitle: `Giao dịch ${orderCode} đã thất bại.`
-              };
+              status: 'error',
+              title: 'Thanh toán không thành công',
+              subTitle: `Giao dịch ${orderCode} đã thất bại.`
+            };
         }
 
         setResultProps(finalResult);
@@ -119,6 +122,12 @@ export default function HandlePayment() {
           />
         )
       )}
+      <span
+            onClick={() => router.push('/profile/orders')}
+            className="block mt-4 text-center font-monsterrat cursor-pointer text-base text-[#4E4663] underline"
+          >
+            Xem đơn hàng của bạn
+          </span>
     </BasePages>
   );
 }

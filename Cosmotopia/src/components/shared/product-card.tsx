@@ -24,7 +24,7 @@ export function ProductCard({
   const [isBookmarked, setIsBookmarked] = React.useState(false)
 
   return (
-    <div className="flex w-[288px] h-full flex-col overflow-hidden rounded-[24px] bg-white shadow-[0px_2px_12px_rgba(20,20,43,0.08)]">
+    <div className="flex w-[288px] h-[370px] flex-col overflow-hidden rounded-[24px] bg-white shadow-[0px_2px_12px_rgba(20,20,43,0.08)]">
       {/* Image Section */}
       <div className="relative h-[198px] w-full bg-[#EAEAEA]">
         <img src={image || "/placeholder.svg"} alt={title} className="h-full w-full object-cover" />

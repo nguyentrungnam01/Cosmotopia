@@ -63,7 +63,6 @@ export function PremiumUpgrade({ onBack }: PremiumUpgradeProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-purple-100">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
-        {/* Header */}
         <div className="flex items-center mb-8">
           <Button
             variant="ghost"
@@ -78,19 +77,18 @@ export function PremiumUpgrade({ onBack }: PremiumUpgradeProps) {
         <div className="text-center mb-12">
           <div className="flex items-center justify-center mb-4">
             <Crown className="w-8 h-8 text-purple-600 mr-2" />
-            <h1 className="text-2xl md:text-3xl font-bold text-purple-600">Đăng ký Cosmotopia cao cấp</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-purple-600">Đăng ký Cosmo cao cấp</h1>
           </div>
           <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">
-            Nâng cấp gói thành viên bạn sẽ nhận được vô vàn lợi ích từ ứng dụng để trở thành phiên bản Cosmotopia.
+            Nâng cấp gói thành viên bạn sẽ nhận được vô vàn lợi ích từ ứng dụng để trở thành phiên bản Cosmo.
           </p>
         </div>
 
-        {/* Pricing Cards */}
         <div className="grid md:grid-cols-3 gap-6 mb-12">
           {pricingTiers.map((tier, index) => (
             <Card
               key={index}
-              className={`relative overflow-hidden bg-gradient-to-br ${tier.gradient} text-white border-0 transform hover:scale-105 transition-transform duration-200`}
+              className={`relative overflow-hidden bg-gradient-to-br from-purple-400 to-pink-400 duration-200`}
             >
               {tier.popular && (
                 <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-purple-800 px-4 py-1 rounded-full text-xs font-bold flex items-center">
@@ -127,9 +125,8 @@ export function PremiumUpgrade({ onBack }: PremiumUpgradeProps) {
           ))}
         </div>
 
-        {/* Benefits Section */}
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 md:p-8 mb-8">
-          <h2 className="text-xl font-bold text-center text-gray-800 mb-6">Lợi ích khi nâng cấp Cosmotopia cao cấp</h2>
+          <h2 className="text-xl font-bold text-center text-gray-800 mb-6">Lợi ích khi nâng cấp Cosmo cao cấp</h2>
           <div className="grid md:grid-cols-3 gap-6">
             <div className="text-center">
               <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -157,7 +154,6 @@ export function PremiumUpgrade({ onBack }: PremiumUpgradeProps) {
           </div>
         </div>
 
-        {/* Money Back Guarantee */}
         <div className="text-center bg-gradient-to-r from-green-100 to-blue-100 rounded-xl p-6">
           <h3 className="font-bold text-gray-800 mb-2">Đảm bảo hoàn tiền 100%</h3>
           <p className="text-sm text-gray-600">

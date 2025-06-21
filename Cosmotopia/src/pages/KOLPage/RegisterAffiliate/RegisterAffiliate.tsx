@@ -167,10 +167,10 @@ export const RegisterAffiliate: FC<RegisterAffiliateProps> = ({}) => {
             <label>
               <div>
                 <h2 className="text-center text-2xl font-bold text-[#FDCD3C]">
-                  🌟 Cosmotopia Affiliate – Kiếm Tiền Từ Đam Mê Làm Đẹp
+                  🌟 Cosmo Affiliate – Kiếm Tiền Từ Đam Mê Làm Đẹp
                 </h2>
                 <p className="mt-2  text-gray-600">
-                  <b>Cosmotopia Affiliate</b> là chương trình dành cho những ai
+                  <b>Cosmo Affiliate</b> là chương trình dành cho những ai
                   yêu thích mỹ phẩm và muốn kiếm tiền dễ dàng từ việc chia sẻ
                   sản phẩm.
                 </p>
@@ -288,14 +288,14 @@ export const RegisterAffiliate: FC<RegisterAffiliateProps> = ({}) => {
                 🚀 Chúc mừng bạn đã đăng ký thành công! 🎉
               </h2>
               <p className="mt-2 text-sm leading-relaxed">
-                Chào mừng bạn đến với <strong>Cosmotopia Affiliate</strong>! Giờ
-                đây, bạn đã chính thức trở thành một Cosmotopia Affiliate. Đây
+                Chào mừng bạn đến với <strong>Cosmo Affiliate</strong>! Giờ
+                đây, bạn đã chính thức trở thành một Cosmo Affiliate. Đây
                 là cơ hội tuyệt vời để kiếm thêm thu nhập từ **niềm đam mê làm
                 đẹp** mà không cần bỏ vốn hay lo lắng về kho hàng, vận chuyển!
               </p>
               <p className="mt-2 text-sm leading-relaxed">
                 Ngay sau khi đăng ký, bạn có thể **tạo link chia sẻ** sản phẩm
-                từ Cosmotopia. Mỗi khi có người mua hàng qua link của bạn, bạn
+                từ Cosmo. Mỗi khi có người mua hàng qua link của bạn, bạn
                 sẽ **nhận hoa hồng tự động**, không cần làm gì thêm! Thanh toán
                 sẽ được thực hiện **trong 7 ngày** sau khi đơn hàng hoàn tất.
               </p>

@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-// import ColorTest1
+import { useRouter } from '@/routes/hooks';
 
 export default function ColorTest() {
+  const router = useRouter();
   return (
     <div className="container mx-auto px-4 py-16">
       <Card className="relative w-full max-w-[1604px] mx-auto p-8 rounded-[32px] bg-white shadow-[0px_8px_60px_rgba(157,18,223,0.15)]">
@@ -33,7 +34,11 @@ export default function ColorTest() {
                 Với công nghệ AI tiên tiến, bạn có thể xác định được tone makeup và mỹ phẩm phù hợp với bạn
               </p>
             </div>
-            <Button className="w-fit text-white bg-gradient-to-r from-purple-600 to-pink-500 rounded-full shadow-lg hover:scale-105 transition font-montserrat rounded-full px-8 py-6 text-lg font-semibold">
+            <Button
+              onClick={() =>
+                router.push(`/scanner`)
+              }
+              className="w-fit text-white bg-gradient-to-r from-purple-600 to-pink-500 rounded-full shadow-lg hover:scale-105 transition font-montserrat rounded-full px-8 py-6 text-lg font-semibold">
               Bắt đầu test →
             </Button>
           </div>

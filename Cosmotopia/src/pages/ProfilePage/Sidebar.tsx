@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { User, Bookmark, ShoppingBag, Bell, Ticket } from 'lucide-react';
+import { BarChart } from 'lucide-react';
 
 const menuItems = [
   {
@@ -40,7 +41,13 @@ const menuItems = [
     icon: Ticket
 
     // to: "/profile/promotions",
-  }
+  },
+  {
+    id: 'affiliate',
+    title: 'Affiliate',
+    icon: BarChart,
+    to: "/kol/tongquan",
+  },
 ];
 
 export function ProfileSidebar() {

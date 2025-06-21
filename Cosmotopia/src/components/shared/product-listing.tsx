@@ -46,7 +46,7 @@ export function ProductListing() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 gap-8 py-7 lg:grid-cols-[312px_1fr]">
+      <div className="grid grid-cols-1 gap-8 py-2 lg:grid-cols-[312px_1fr]">
         {/* Sidebar */}
         <div className="flex flex-col gap-3 py-12">
           <nav className="w-[312px] space-y-2 p-2">
@@ -91,13 +91,13 @@ export function ProductListing() {
         {/* Product Grid */}
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-[#2D2D2D]">
+            <h2 className="text-3xl font-bold text-[#2D2D2D] font-montserrat">
               Sản phẩm nổi bật
             </h2>
             <Button
               onClick={() => router.push('/productGrid')}
               variant="link"
-              className="text-purple-600"
+              className="text-purple-600 font-montserrat"
             >
               Xem tất cả
               <ChevronRight className="ml-1 h-4 w-4" />

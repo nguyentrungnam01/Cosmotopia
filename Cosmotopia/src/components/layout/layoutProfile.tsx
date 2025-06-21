@@ -50,7 +50,7 @@ export default function DashboardLayout({
             <ProfileSidebar />
           </div>
           <div className="flex w-3/4 flex-col rounded-md bg-white p-5 shadow-lg ">
-            <main className="flex-1 overflow-y-auto">{children}</main>
+            <main className="flex-1 overflow-y-auto bg-[#FBFBFB]">{children}</main>
           </div>
         </div>
         {/* <Footer /> */}

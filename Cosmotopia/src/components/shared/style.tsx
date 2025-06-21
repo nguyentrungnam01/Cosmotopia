@@ -13,7 +13,7 @@ export default function MakeupTones() {
   
     return (
       <div className="flex justify-center p-6">
-        <div className="bg-gray-100 rounded-3xl shadow-lg p-6 w-[70%]">
+        <div className="bg-gray-100 rounded-3xl shadow-lg p-6 w-[75%]">
           <h2 className="text-2xl font-bold text-center text-gray-800 mb-4">
             Tone trang điểm phổ biến
           </h2>
@@ -21,7 +21,7 @@ export default function MakeupTones() {
             {tones.map((tone, index) => (
               <div
                 key={index}
-                className={`relative rounded-2xl overflow-hidden ${tone.colSpan} h-48`}
+                className={`relative rounded-2xl overflow-hidden ${tone.colSpan} h-64`}
               >
                 <img
                   src={tone.image}

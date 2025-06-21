@@ -1,7 +1,7 @@
-"use client"
 
 import { useState } from "react"
-import Image from "next/image"
+// import Image from "next/image"
+import { Image } from "antd"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Check, Star, ArrowRight, Users, Award, Zap } from "lucide-react"
@@ -9,6 +9,7 @@ import { FeatureShowcase } from "./feature-showcase"
 import { ColorAnalysisDemo } from "./color-analysis-demo"
 import { FAQSection } from "./faq-section"
 import { PremiumUpgrade } from "./premium-upgrade"
+import ColorTestImage from "@/assets/color-test-1.png";
 
 export default function ScreenScanner() {
   const [activeTab, setActiveTab] = useState("demo")
@@ -222,7 +223,7 @@ export default function ScreenScanner() {
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div className="relative">
               <Image
-                src="/color-scanner-demo.png"
+                src= {ColorTestImage}
                 alt="Color Scanner App Demo"
                 width={300}
                 height={400}

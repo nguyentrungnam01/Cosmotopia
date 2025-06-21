@@ -43,7 +43,7 @@ export default function DashboardLayout({
       />
       <Sidebar />
 
-      <main className="flex-1 overflow-y-auto">{children}</main>
+      <main className="flex-1 overflow-y-auto bg-[#FBFBFB]">{children}</main>
       <Footer />
       <Toaster />
     </div>

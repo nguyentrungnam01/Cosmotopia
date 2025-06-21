@@ -11,7 +11,7 @@ import AffiliateBanner from '@/components/shared/affi-banner';
 import ColorTest from '@/components/shared/color-test';
 export default function ShopPage() {
   return (
-    <div className="bg-white">
+    <div className="bg-white bg-[linear-gradient(0deg,_rgba(199,_116,_253,_0.2)_0.01%,_rgba(255,_255,_255,_0)_100%)]">
       <div className="relative">
         {/* Image Banner */}
         {/* <img className="w-full" alt="banner" src={BannerImage} /> */}
@@ -20,7 +20,7 @@ export default function ShopPage() {
         {/* <Banner /> */}
       </div>
       <BasePages
-        className="relative mx-auto w-full flex-1 overflow-y-auto bg-white"
+        className="relative mx-auto w-full flex-1 overflow-y-auto"
         pageHead="Trang chủ"
       >
         {/* <ProductCategories/> */}

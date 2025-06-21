@@ -77,15 +77,15 @@ export default function Sidebar() {
   };
 
   return (
-    <nav className={cn(`relative z-10 mx-auto w-[80%] flex-none md:block`)}>
+    <nav className={cn(`relative z-10 mx-auto w-[100%] flex-none md:block`)}>
       <div className="mx-auto w-full justify-center px-0">
-        <div className="flex items-center justify-between border-b border-gray-200 py-4 drop-shadow-md">
+        <div className="flex items-center justify-between border-b-2 border-gray-200 py-4 drop-shadow-md pl-16">
           <span
             onClick={() => router.push('/')}
             className="flex cursor-pointer items-center text-[36px]"
           >
             <img src={cosmeLogo} alt="cosme-logo" className="mr-2 h-8 w-8" />{' '}
-            Cosmotopia
+            Cosmo
           </span>
           <div className="relative z-50 ml-12 mr-12 flex-1 " ref={dropdownRef}>
             <div className="relative">
@@ -122,7 +122,7 @@ export default function Sidebar() {
               </div>
             )}
           </div>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-6 mr-16">
             <div className="cart">
               <ShoppingCartIcon className="text-blue-500 mr-1 h-6 w-6" />
               <span
@@ -137,7 +137,7 @@ export default function Sidebar() {
             </div>
           </div>
         </div>
-        <div className="space-y-4 pb-4">
+        <div className="space-y-4">
           <HeaderNav items={navItems} />
         </div>
       </div>

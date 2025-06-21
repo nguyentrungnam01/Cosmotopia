@@ -17,9 +17,9 @@ export default function Footer() {
                 alt="cosme-logo"
                 className='w-8 h-8 mr-2'
               />
-              Cosmotopia
+              Cosmo
             </div>
-            <p className="text-gray-600 mb-6 font-montserrat">Cosmotopia - Vẻ Đẹp Chuẩn Tông Màu</p>
+            <p className="text-gray-600 mb-6 font-montserrat">Cosmo - Vẻ Đẹp Chuẩn Tông Màu</p>
             <div className="flex gap-4">
               <a href="https://www.facebook.com/" className="text-gray-600 hover:text-gray-900">
                 <span className="sr-only">Facebook</span>

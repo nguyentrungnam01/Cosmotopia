@@ -17,6 +17,8 @@ import Unauthorized from '@/pages/unauthorizedPage';
 import { Suspense, lazy } from 'react';
 import { Navigate, Outlet, useRoutes } from 'react-router-dom';
 
+import ScreenScanner from '@/pages/Scanner/screen-scanner';
+
 const SystemLayout = lazy(() => import('@/components/layout/layout'));
 const ProfileLayout = lazy(() => import('@/components/layout/layoutProfile'));
 const HomePage = lazy(() => import('@/pages/Home/index'));
@@ -84,10 +86,15 @@ export default function AppRouter() {
           ),
           index: true
         },
-        // {
-        //   path: '/profile',
-        //   element: <ProfilePage />
-        // },
+        {
+          path: '/scanner',
+          element: (
+            <ProtectedRoute allowedRoles={['Guest', 'Customers', 'Affiliates']}>
+              <ScreenScanner />,
+            </ProtectedRoute>
+          ),
+          index: true
+        },
         {
           path: '/login',
           element: (

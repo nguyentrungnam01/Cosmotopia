@@ -1,1 +1,1 @@
-# Cosmotopia
+# Cosmo
