@@ -33,7 +33,7 @@ export const useGetProfile = () => {
 
 export const useEditProfile = () => {
   return useMutation({
-    mutationKey: ['edit_proile'],
+    mutationKey: ['edit_profile'],
     mutationFn: async (model: any) => {
       return await BaseRequest.Put(`/api/User/EditSelf`, model);
     }
@@ -65,7 +65,7 @@ export const useUpdateAddress = () => {
   return useMutation({
     mutationKey: ['update_address'],
     mutationFn: async (model: any) => {
-      return await BaseRequest.Put(`/api/User/update-address`, model);
+      return await BaseRequest.Put(`/api/User/UpdateAddress`, model);
     }
   });
 };

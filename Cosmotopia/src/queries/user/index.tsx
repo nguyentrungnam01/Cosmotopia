@@ -7,3 +7,4 @@ export const useGetUserDetail = (userId) => {
     queryFn: async () => getUserDetail(userId)
   });
 };
+

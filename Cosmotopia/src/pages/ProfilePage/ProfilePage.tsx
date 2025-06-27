@@ -17,7 +17,7 @@ export default function ProfilePage() {
     lastName: '',
     email: '',
     phone: '',
-    gender: 'female'
+    gender: ''
   });
 
   const [isEditing, setIsEditing] = useState({

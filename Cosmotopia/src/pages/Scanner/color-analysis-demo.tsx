@@ -5,9 +5,9 @@ import type React from "react"
 import { useState, useRef } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Upload, Sparkles, X, Camera } from "lucide-react"
+import { Upload, Sparkles, X, Camera} from "lucide-react"
 import { ColorPalette } from "./color-palette"
-import Image from "next/image"
+// import Image from "next/image"
 
 const colorSeasons = [
   {
@@ -125,8 +125,9 @@ export function ColorAnalysisDemo() {
           {uploadedImage ? (
             <div className="space-y-4">
               <div className="relative inline-block">
-                <Image
+                <image
                   src={uploadedImage || "/placeholder.svg"}
+                  // src={uploadedImage}
                   alt="Uploaded image"
                   width={200}
                   height={200}
