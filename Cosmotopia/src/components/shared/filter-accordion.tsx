@@ -1,19 +1,15 @@
-
-import type React from "react"
-
-import { useState } from "react"
+import React, { useState } from "react"
 import { ChevronDown } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { FilterIcons } from "./filter-icons"
 
-type FilterItem = {
+export interface FilterItem {
   id: string
   title: string
-  icon: keyof typeof FilterIcons
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>
   content?: React.ReactNode
 }
 
-type FilterAccordionProps = {
+export interface FilterAccordionProps {
   items: FilterItem[]
   className?: string
 }
@@ -22,7 +18,7 @@ export function FilterAccordion({ items, className }: FilterAccordionProps) {
   const [openItems, setOpenItems] = useState<Record<string, boolean>>({})
 
   const toggleItem = (id: string) => {
-    setOpenItems((prev) => ({
+    setOpenItems(prev => ({
       ...prev,
       [id]: !prev[id],
     }))
@@ -30,34 +26,52 @@ export function FilterAccordion({ items, className }: FilterAccordionProps) {
 
   return (
     <div className={cn("flex flex-col gap-3", className)}>
-      {items.map((item) => {
-        const Icon = FilterIcons[item.icon]
-        const isOpen = openItems[item.id]
-
+      {items.map(({ id, title, icon: Icon, content }) => {
+        const isOpen = openItems[id]
         return (
-          <div key={item.id} className="overflow-hidden rounded-xl bg-white shadow-lg">
+          <div
+            key={id}
+            className="overflow rounded-xl bg-white shadow-lg filter drop-shadow-[0px_2px_12px_rgba(20,20,43,0.08)]"
+          >
             <button
               type="button"
-              onClick={() => toggleItem(item.id)}
-              className="flex w-full items-center justify-between px-4 py-3.5"
+              onClick={() => toggleItem(id)}
+              className={cn(
+                "flex w-full items-center justify-between rounded-xl bg-white p-3 text-left transition-all hover:bg-purple-50",
+                isOpen ? "text-purple-600" : "text-gray-700 hover:text-purple-600"
+              )}
             >
               <div className="flex items-center gap-4">
-                <Icon className="size-5 text-gray-600" />
-                <span className="text-base font-medium text-gray-700">{item.title}</span>
+                <Icon
+                  className={cn(
+                    "w-5 h-5 transition-colors",
+                    isOpen ? "text-purple-600" : "text-gray-600"
+                  )}
+                />
+                <span
+                  className={cn(
+                    "font-montserrat text-base font-medium",
+                    isOpen ? "text-purple-600" : "text-gray-700"
+                  )}
+                >
+                  {title}
+                </span>
               </div>
               <ChevronDown
-                className={cn("size-5 text-gray-600 transition-transform duration-200", isOpen ? "rotate-180" : "")}
+                className={cn(
+                  "w-5 h-5 transition-transform duration-200",
+                  isOpen ? "text-purple-600 rotate-180" : "text-gray-600"
+                )}
               />
             </button>
-
-            {item.content && (
+            {content && (
               <div
                 className={cn(
                   "overflow-hidden transition-all duration-300 ease-in-out",
-                  isOpen ? "max-h-96 pb-4" : "max-h-0",
+                  isOpen ? "max-h-96 pb-4" : "max-h-0"
                 )}
               >
-                <div className="px-4">{item.content}</div>
+                <div className="px-4 py-2">{content}</div>
               </div>
             )}
           </div>
@@ -66,4 +80,3 @@ export function FilterAccordion({ items, className }: FilterAccordionProps) {
     </div>
   )
 }
-

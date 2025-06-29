@@ -74,13 +74,14 @@ export function ProductGrid({ filters }: ProductGridProps) {
 
 
       {/* Pagination */}
-      <div className="flex justify-center mt-6">
+      <div className="flex justify-end mt-6 mr-8">
         <Pagination
           current={currentPage}
           pageSize={pageSize}
           total={totalProducts}
           onChange={(page) => setCurrentPage(page)}
           showSizeChanger={false}
+          rootClassName="custom-pagination"
         />
       </div>
     </div>
