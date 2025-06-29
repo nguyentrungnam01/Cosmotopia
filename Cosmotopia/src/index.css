@@ -89,6 +89,55 @@
 body {
   margin: 0;
 }
-.ant-btn-primary {
-  background-color: #1677ff;
+.custom-pagination .ant-pagination-item {
+  border-color: #9C3CFD;
+}
+
+.custom-pagination .ant-pagination-item:hover {
+  border-color: #BF38FF;
+}
+
+.custom-pagination .ant-pagination-item-active {
+  border-color: #9C3CFD;
+}
+
+.custom-pagination .ant-pagination-item-ellipsis:hover,
+.custom-pagination .ant-pagination-prev:hover,
+.custom-pagination .ant-pagination-next:hover {
+  border-color: #BF38FF;
+}
+
+/* Text mặc định của các ô page */
+.custom-pagination .ant-pagination-item a {
+  color: #9C3CFD;
+}
+
+/* Hover lên các ô page */
+.custom-pagination .ant-pagination-item:hover a {
+  color: #BF38FF;
+}
+
+/* Ô đang active */
+.custom-pagination .ant-pagination-item-active a {
+  color: #9C3CFD;
+  font-weight: 600; /* nếu cần đậm chữ */
+}
+
+/* prev/next và ellipsis */
+.custom-pagination .ant-pagination-prev a,
+.custom-pagination .ant-pagination-next a,
+.custom-pagination .ant-pagination-item-ellipsis a {
+  color: #9C3CFD;
+}
+
+.custom-pagination .ant-pagination-prev:hover a,
+.custom-pagination .ant-pagination-next:hover a,
+.custom-pagination .ant-pagination-item-ellipsis:hover a {
+  color: #BF38FF;
+}
+
+/* Disable state */
+.custom-pagination .ant-pagination-disabled a {
+  color: #ccc;
+  cursor: not-allowed;
 }
