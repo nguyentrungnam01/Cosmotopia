@@ -7,20 +7,35 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { MessageCircle, X, Send, Bot, User, Minimize2, ImageIcon, Trash2 } from "lucide-react"
+import { scannerService } from "./scanner-service"
 
 interface Message {
   id: string
   content: string
   role: "user" | "assistant"
   timestamp: Date
-  type?: "text" | "image"
+  type?: "text" | "image" | "skin-analysis"
   imageUrl?: string
+  skinResult?: SkinAnalysisResult
 }
 
 interface QuickReply {
   id: string
   text: string
   message: string
+}
+
+interface SkinAnalysisResult {
+  acne: string
+  wrinkles: string
+  freckles: string
+  oiliness: string
+  elasticity: string
+  tone: string
+  texture: string
+  skinType: string
+  aiResponse?: string
+  products?: Array<{ name: string; link: string; image?: string; price?: string; source: 'internal' | 'google' }>
 }
 
 const quickReplies: QuickReply[] = [
@@ -44,6 +59,36 @@ const quickReplies: QuickReply[] = [
     text: "Màu theo mùa",
     message: "Làm thế nào để biết tôi thuộc nhóm màu nào (Xuân, Hạ, Thu, Đông)?",
   },
+]
+
+const mockSkinResult: SkinAnalysisResult = {
+  acne: "Ít mụn, da khá sạch",
+  wrinkles: "Có nếp nhăn nhẹ ở khóe mắt",
+  freckles: "Một vài đốm tàn nhang nhỏ",
+  oiliness: "Da hỗn hợp, vùng chữ T hơi dầu",
+  elasticity: "Độ đàn hồi tốt, da săn chắc",
+  tone: "Sáng vừa, hơi ngả vàng",
+  texture: "Mịn, lỗ chân lông nhỏ",
+  skinType: "Combination (Da hỗn hợp)",
+  aiResponse: "Da bạn thuộc loại hỗn hợp, cần chú ý dưỡng ẩm vùng má và kiểm soát dầu vùng trán, mũi.",
+  products: []
+}
+
+const googleProducts: SkinAnalysisResult['products'] = [
+  {
+    name: "Kem dưỡng ẩm CeraVe Moisturizing Cream",
+    link: "https://www.google.com/search?q=cerave+moisturizing+cream",
+    image: "https://cdn.tgdd.vn/Products/Images/8782/251248/cerave-moisturizing-cream-340g-1-600x600.jpg",
+    price: "Khoảng 350.000đ",
+    source: 'google'
+  },
+  {
+    name: "Sữa rửa mặt La Roche-Posay Effaclar",
+    link: "https://www.google.com/search?q=la+roche+posay+effaclar",
+    image: "https://cdn.tgdd.vn/Products/Images/8782/251249/la-roche-posay-effaclar-600x600.jpg",
+    price: "Khoảng 250.000đ",
+    source: 'google'
+  }
 ]
 
 export function AIChatbot() {
@@ -133,51 +178,27 @@ export function AIChatbot() {
     setIsLoading(true)
     setShowQuickReplies(false)
 
-    
     simulateTyping(1500)
 
     try {
-      
-      const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 10000) 
-
-      const response = await fetch("https://localhost:7191/api/Chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        mode: "cors", 
-        credentials: "omit", 
-        signal: controller.signal,
-        body: JSON.stringify({
-          message: textToSend,
-          context: "Personal Color Scanner AI Assistant - Vietnamese language",
-          userId: "user_" + Date.now(),
-          sessionId: localStorage.getItem("chat-session-id") || "session_" + Date.now(),
-        }),
+      // Use scanner service to send chat message
+      const response = await scannerService.sendChatMessage({
+        message: textToSend,
+        context: "Personal Color Scanner AI Assistant - Vietnamese language",
+        userId: "user_" + Date.now(),
+        sessionId: localStorage.getItem("chat-session-id") || "session_" + Date.now(),
       })
 
-      clearTimeout(timeoutId)
-
-      if (!response.ok) {
-        throw new Error(`Server error: ${response.status} ${response.statusText}`)
-      }
-
-      const data = await response.json()
-
-      
       setTimeout(() => {
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
-          content: data.response || data.message || "Xin lỗi, tôi không thể trả lời câu hỏi này lúc này. 😔",
+          content: response.response || response.message || "Xin lỗi, tôi không thể trả lời câu hỏi này lúc này. 😔",
           role: "assistant",
           timestamp: new Date(),
         }
 
         setMessages((prev) => [...prev, assistantMessage])
 
-        
         if (!isOpen) {
           setUnreadCount((prev) => prev + 1)
         }
@@ -188,7 +209,7 @@ export function AIChatbot() {
       let errorMessage = "Xin lỗi, có lỗi xảy ra khi kết nối với server. 😞\n\n"
 
       if (error instanceof Error) {
-        if (error.name === "AbortError") {
+        if (error.message.includes("timeout")) {
           errorMessage += "• Kết nối bị timeout (quá 10 giây)\n• Vui lòng thử lại"
         } else if (error.message.includes("Failed to fetch")) {
           errorMessage +=
@@ -287,34 +308,67 @@ export function AIChatbot() {
     handleSendMessage(reply.message)
   }
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file && file.type.startsWith("image/")) {
       const reader = new FileReader()
-      reader.onload = (event) => {
+      reader.onload = async (event) => {
         const imageUrl = event.target?.result as string
         const imageMessage: Message = {
           id: Date.now().toString(),
-          content: "Tôi đã gửi một hình ảnh để phân tích màu sắc",
+          content: "Tôi đã gửi một hình ảnh để phân tích da",
           role: "user",
           timestamp: new Date(),
           type: "image",
           imageUrl: imageUrl,
         }
-
         setMessages((prev) => [...prev, imageMessage])
-
-        
-        setTimeout(() => {
-          const analysisMessage: Message = {
-            id: (Date.now() + 1).toString(),
-            content:
-              "Cảm ơn bạn đã gửi hình ảnh! 📸\n\nTôi đã phân tích ảnh của bạn và nhận thấy:\n• Tông da: Ấm/Lạnh\n• Màu sắc phù hợp: [Danh sách màu]\n• Gợi ý trang điểm: [Chi tiết]\n\nĐể có kết quả chính xác hơn, bạn có thể sử dụng tính năng 'Phân tích màu sắc' trong ứng dụng! ✨",
-            role: "assistant",
-            timestamp: new Date(),
-          }
-          setMessages((prev) => [...prev, analysisMessage])
-        }, 2000)
+        setIsLoading(true)
+        setShowQuickReplies(false)
+        try {
+          // 1. Phân tích da (mock)
+          const skinResult: SkinAnalysisResult = { ...mockSkinResult }
+          // 2. Lấy sản phẩm nội bộ
+          const internalProducts = await scannerService.getAllProducts()
+          skinResult.products = (internalProducts || []).slice(0, 3).map(p => ({
+            name: p.name,
+            link: `/product/${p.id}`,
+            image: p.image ? (p.image.startsWith('http') ? p.image : `https://localhost:7191${p.image}`) : undefined,
+            price: p.price ? scannerService.formatPrice(p.price) : undefined,
+            source: 'internal'
+          }))
+          // 3. Lấy sản phẩm từ Google (mock)
+          skinResult.products = [...(skinResult.products || []), ...googleProducts]
+          // 4. Hiển thị kết quả trong chat
+          simulateTyping(2000)
+          setTimeout(() => {
+            const analysisMessage: Message = {
+              id: (Date.now() + 1).toString(),
+              content: '', // content sẽ render custom
+              role: "assistant",
+              timestamp: new Date(),
+              type: "skin-analysis",
+              imageUrl: undefined,
+              skinResult: skinResult
+            }
+            setMessages((prev) => [...prev, analysisMessage])
+            if (!isOpen) {
+              setUnreadCount((prev) => prev + 1)
+            }
+          }, 2000)
+        } catch (error) {
+          setTimeout(() => {
+            const errorMessage: Message = {
+              id: (Date.now() + 1).toString(),
+              content: "Xin lỗi, có lỗi xảy ra khi phân tích ảnh.",
+              role: "assistant",
+              timestamp: new Date(),
+            }
+            setMessages((prev) => [...prev, errorMessage])
+          }, 2000)
+        } finally {
+          setIsLoading(false)
+        }
       }
       reader.readAsDataURL(file)
     }
@@ -356,6 +410,75 @@ export function AIChatbot() {
       </span>
     ))
   }
+
+  const renderSkinAnalysis = (result: SkinAnalysisResult) => (
+    <div>
+      <div className="font-bold text-purple-700 mb-2">🔬 Kết quả phân tích da</div>
+      <table className="w-full text-xs text-left mb-2">
+        <tbody>
+          <tr><td className="font-semibold pr-2">Mụn:</td><td>{result.acne}</td></tr>
+          <tr><td className="font-semibold pr-2">Nếp nhăn:</td><td>{result.wrinkles}</td></tr>
+          <tr><td className="font-semibold pr-2">Tàn nhang, nám:</td><td>{result.freckles}</td></tr>
+          <tr><td className="font-semibold pr-2">Độ dầu:</td><td>{result.oiliness}</td></tr>
+          <tr><td className="font-semibold pr-2">Độ đàn hồi:</td><td>{result.elasticity}</td></tr>
+          <tr><td className="font-semibold pr-2">Tone da:</td><td>{result.tone}</td></tr>
+          <tr><td className="font-semibold pr-2">Kết cấu da:</td><td>{result.texture}</td></tr>
+          <tr><td className="font-semibold pr-2">Loại da:</td><td className="font-bold text-purple-700">{result.skinType}</td></tr>
+        </tbody>
+      </table>
+      {result.aiResponse && (
+        <div className="mb-2 p-2 bg-blue-50 border border-blue-100 rounded text-xs text-blue-700">{result.aiResponse}</div>
+      )}
+    </div>
+  )
+
+  const renderProductSuggestions = (products: SkinAnalysisResult['products']) => {
+    if (!products || products.length === 0) return null;
+    const internal = products.filter(p => p.source === 'internal');
+    const google = products.filter(p => p.source === 'google');
+    return (
+      <div className="mt-2">
+        {internal.length > 0 && (
+          <div className="mb-2">
+            <div className="font-semibold text-green-700 mb-1">Sản phẩm gợi ý từ Cosmotopia:</div>
+            <div className="grid grid-cols-1 gap-2">
+              {internal.map((p, i) => (
+                <a key={i} href={p.link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 p-2 bg-white border rounded hover:shadow">
+                  {p.image
+                    ? <img src={p.image} alt={p.name} className="w-10 h-10 object-cover rounded" />
+                    : <img src="/placeholder.png" alt="No image" className="w-10 h-10 object-cover rounded" />
+                  }
+                  <div className="flex-1">
+                    <div className="font-medium text-sm">{p.name}</div>
+                    {p.price && <div className="text-xs text-gray-500">{p.price}</div>}
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+        {google.length > 0 && (
+          <div>
+            <div className="font-semibold text-blue-700 mb-1">Sản phẩm tham khảo từ Google:</div>
+            <div className="grid grid-cols-1 gap-2">
+              {google.map((p, i) => (
+                <a key={i} href={p.link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 p-2 bg-white border rounded hover:shadow">
+                  {p.image
+                    ? <img src={p.image} alt={p.name} className="w-10 h-10 object-cover rounded" />
+                    : <img src="/placeholder.png" alt="No image" className="w-10 h-10 object-cover rounded" />
+                  }
+                  <div className="flex-1">
+                    <div className="font-medium text-sm">{p.name}</div>
+                    {p.price && <div className="text-xs text-gray-500">{p.price}</div>}
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <>
@@ -466,7 +589,14 @@ export function AIChatbot() {
                                 />
                               </div>
                             )}
-                            <p className="text-sm leading-relaxed">{formatMessageContent(message.content)}</p>
+                            {message.type === "skin-analysis" && message.skinResult ? (
+                              <div>
+                                {renderSkinAnalysis(message.skinResult)}
+                                {renderProductSuggestions(message.skinResult.products)}
+                              </div>
+                            ) : (
+                              <p className="text-sm leading-relaxed">{formatMessageContent(message.content)}</p>
+                            )}
                             <p
                               className={`text-xs mt-1 ${message.role === "user" ? "text-white/70" : "text-gray-500"}`}
                             >
@@ -524,7 +654,7 @@ export function AIChatbot() {
                   <div ref={messagesEndRef} />
                 </div>
 
-             
+               
                 <div className="p-4 border-t border-gray-200 bg-white">
                   <div className="flex space-x-2 mb-2">
                     <Input

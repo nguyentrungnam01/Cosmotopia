@@ -5,37 +5,42 @@ import type React from "react"
 import { useState, useRef } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Upload, Sparkles, X, Camera} from "lucide-react"
-import { ColorPalette } from "./color-palette"
+import { Upload, Sparkles, X, Camera } from "lucide-react"
+import { ProductRecommendations } from "./product-recommendations"
+import { scannerService } from "./scanner-service"
 
-const colorSeasons = [
-  {
-    season: "Mùa Xuân",
-    colors: ["#FFB6C1", "#98FB98", "#F0E68C", "#DDA0DD", "#87CEEB"],
-    description: "Màu sắc tươi sáng, ấm áp phù hợp với tông da vàng",
-  },
-  {
-    season: "Mùa Hè",
-    colors: ["#E6E6FA", "#B0E0E6", "#F5DEB3", "#DDA0DD", "#FFB6C1"],
-    description: "Màu sắc nhẹ nhàng, mát mẻ cho tông da hồng",
-  },
-  {
-    season: "Mùa Thu",
-    colors: ["#D2691E", "#CD853F", "#B22222", "#DAA520", "#8B4513"],
-    description: "Màu sắc ấm, đậm đà phù hợp với tông da vàng đậm",
-  },
-  {
-    season: "Mùa Đông",
-    colors: ["#000080", "#8B0000", "#2F4F4F", "#800080", "#000000"],
-    description: "Màu sắc tương phản mạnh cho tông da lạnh",
-  },
-]
+// Define the skin analysis result type
+interface SkinAnalysisResult {
+  acne: string // Mụn
+  wrinkles: string // Nếp nhăn
+  freckles: string // Tàn nhang, nám
+  oiliness: string // Độ dầu
+  elasticity: string // Độ đàn hồi
+  tone: string // Tone da
+  texture: string // Kết cấu da
+  skinType: string // Loại da
+  aiResponse?: string // Phân tích chi tiết từ AI (nếu có)
+}
+
+// Mock data in case API does not return
+const mockSkinResult: SkinAnalysisResult = {
+  acne: "Ít mụn, da khá sạch",
+  wrinkles: "Có nếp nhăn nhẹ ở khóe mắt",
+  freckles: "Một vài đốm tàn nhang nhỏ",
+  oiliness: "Da hỗn hợp, vùng chữ T hơi dầu",
+  elasticity: "Độ đàn hồi tốt, da săn chắc",
+  tone: "Sáng vừa, hơi ngả vàng",
+  texture: "Mịn, lỗ chân lông nhỏ",
+  skinType: "Combination (Da hỗn hợp)",
+  aiResponse: "Da bạn thuộc loại hỗn hợp, cần chú ý dưỡng ẩm vùng má và kiểm soát dầu vùng trán, mũi."
+}
 
 export function ColorAnalysisDemo() {
-  const [selectedSeason, setSelectedSeason] = useState<string | null>(null)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [uploadedImage, setUploadedImage] = useState<string | null>(null)
   const [dragActive, setDragActive] = useState(false)
+  const [analysisResult, setAnalysisResult] = useState<SkinAnalysisResult | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleFileSelect = (file: File) => {
@@ -43,6 +48,7 @@ export function ColorAnalysisDemo() {
       const reader = new FileReader()
       reader.onload = (e) => {
         setUploadedImage(e.target?.result as string)
+        setError(null)
       }
       reader.readAsDataURL(file)
     }
@@ -69,32 +75,38 @@ export function ColorAnalysisDemo() {
     e.preventDefault()
     e.stopPropagation()
     setDragActive(false)
-
     const file = e.dataTransfer.files?.[0]
     if (file) {
       handleFileSelect(file)
     }
   }
 
-  const handleAnalyze = () => {
+  const handleAnalyze = async () => {
     if (!uploadedImage) {
-      alert("Vui lòng tải ảnh lên trước khi phân tích!")
+      setError("Vui lòng tải ảnh lên trước khi phân tích!")
       return
     }
-
     setIsAnalyzing(true)
-   
-    setTimeout(() => {
-      const seasons = ["Mùa Xuân", "Mùa Hè", "Mùa Thu", "Mùa Đông"]
-      const randomSeason = seasons[Math.floor(Math.random() * seasons.length)]
-      setSelectedSeason(randomSeason)
+    setAnalysisResult(null)
+    setError(null)
+    try {
+      // Call your real API here. For now, we mock the result.
+      // const result = await scannerService.analyzeSkin(uploadedImage)
+      // setAnalysisResult(result)
+      setTimeout(() => {
+        setAnalysisResult(mockSkinResult)
+        setIsAnalyzing(false)
+      }, 2000)
+    } catch (error) {
+      setError("Có lỗi xảy ra khi phân tích ảnh")
       setIsAnalyzing(false)
-    }, 3000)
+    }
   }
 
   const removeImage = () => {
     setUploadedImage(null)
-    setSelectedSeason(null)
+    setAnalysisResult(null)
+    setError(null)
     if (fileInputRef.current) {
       fileInputRef.current.value = ""
     }
@@ -103,9 +115,12 @@ export function ColorAnalysisDemo() {
   return (
     <Card className="bg-white/80 backdrop-blur-sm border border-purple-100">
       <CardContent className="p-6">
-        <h3 className="text-lg font-bold text-gray-800 mb-4 text-center">Thử nghiệm phân tích màu sắc</h3>
-
-       
+        <h3 className="text-lg font-bold text-gray-800 mb-4 text-center">Thử nghiệm phân tích da</h3>
+        {error && (
+          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-red-600 text-sm">{error}</p>
+          </div>
+        )}
         <div
           className={`border-2 border-dashed rounded-lg p-8 text-center mb-6 transition-colors ${
             dragActive
@@ -120,7 +135,6 @@ export function ColorAnalysisDemo() {
           onDrop={handleDrop}
         >
           <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileInputChange} className="hidden" />
-
           {uploadedImage ? (
             <div className="space-y-4">
               <div className="relative inline-block">
@@ -148,7 +162,7 @@ export function ColorAnalysisDemo() {
                 </div>
               </div>
               <div>
-                <p className="text-gray-600 mb-2">Tải ảnh lên để phân tích Personal Color</p>
+                <p className="text-gray-600 mb-2">Tải ảnh lên để phân tích da</p>
                 <p className="text-sm text-gray-500 mb-4">Kéo thả ảnh vào đây hoặc click để chọn file</p>
                 <div className="flex gap-2 justify-center">
                   <Button
@@ -165,7 +179,6 @@ export function ColorAnalysisDemo() {
             </div>
           )}
         </div>
-
         <div className="text-center mb-6">
           <Button
             onClick={handleAnalyze}
@@ -185,50 +198,31 @@ export function ColorAnalysisDemo() {
             )}
           </Button>
         </div>
-
-       
-        {selectedSeason && (
-          <div className="space-y-4">
-            <div className="text-center p-4 bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg">
-              <h4 className="font-bold text-purple-600 mb-2">🎉 Kết quả phân tích</h4>
-              <p className="text-sm text-gray-700">
-                Bạn thuộc nhóm màu <strong>{selectedSeason}</strong>
-              </p>
-              <p className="text-xs text-gray-600 mt-1">Độ chính xác: 94% • Thời gian phân tích: 2.8s</p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {colorSeasons.map((season, index) => (
-                <div
-                  key={index}
-                  className={`${season.season === selectedSeason ? "ring-2 ring-purple-400 ring-offset-2" : ""}`}
-                >
-                  <ColorPalette colors={season.colors} title={season.season} description={season.description} />
+        {analysisResult && (
+          <div className="space-y-6">
+            <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg p-4">
+              <h4 className="font-bold text-purple-600 mb-2">🔬 Kết quả phân tích da</h4>
+              <table className="w-full text-sm text-left mt-2">
+                <tbody>
+                  <tr><td className="font-semibold pr-2">Mụn:</td><td>{analysisResult.acne}</td></tr>
+                  <tr><td className="font-semibold pr-2">Nếp nhăn:</td><td>{analysisResult.wrinkles}</td></tr>
+                  <tr><td className="font-semibold pr-2">Tàn nhang, nám:</td><td>{analysisResult.freckles}</td></tr>
+                  <tr><td className="font-semibold pr-2">Độ dầu:</td><td>{analysisResult.oiliness}</td></tr>
+                  <tr><td className="font-semibold pr-2">Độ đàn hồi:</td><td>{analysisResult.elasticity}</td></tr>
+                  <tr><td className="font-semibold pr-2">Tone da:</td><td>{analysisResult.tone}</td></tr>
+                  <tr><td className="font-semibold pr-2">Kết cấu da:</td><td>{analysisResult.texture}</td></tr>
+                  <tr><td className="font-semibold pr-2">Loại da:</td><td className="font-bold text-purple-700">{analysisResult.skinType}</td></tr>
+                </tbody>
+              </table>
+              {analysisResult.aiResponse && (
+                <div className="mt-4 p-3 bg-blue-50 border border-blue-100 rounded">
+                  <div className="font-semibold mb-1 text-blue-700">Phân tích chi tiết:</div>
+                  <div className="text-sm text-gray-700 whitespace-pre-line">{analysisResult.aiResponse}</div>
                 </div>
-              ))}
+              )}
             </div>
-
-         
-            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4 mt-4">
-              <h5 className="font-semibold text-gray-800 mb-2">💡 Gợi ý cho bạn:</h5>
-              <ul className="text-sm text-gray-600 space-y-1">
-                <li>
-                  • Màu son phù hợp:{" "}
-                  {selectedSeason === "Mùa Xuân"
-                    ? "Coral, Peach"
-                    : selectedSeason === "Mùa Hè"
-                      ? "Rose, Berry"
-                      : selectedSeason === "Mùa Thu"
-                        ? "Brick Red, Orange"
-                        : "Deep Red, Plum"}
-                </li>
-                <li>• Trang phục: Chọn màu từ bảng màu {selectedSeason.toLowerCase()}</li>
-                <li>
-                  • Phụ kiện: {selectedSeason === "Mùa Xuân" || selectedSeason === "Mùa Thu" ? "Vàng" : "Bạc"} sẽ làm
-                  bạn nổi bật hơn
-                </li>
-              </ul>
-            </div>
+            {/* Recommended Products */}
+            <ProductRecommendations limit={6} />
           </div>
         )}
       </CardContent>
