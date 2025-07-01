@@ -24,15 +24,25 @@ interface SkinAnalysisResult {
 
 // Mock data in case API does not return
 const mockSkinResult: SkinAnalysisResult = {
-  acne: "Ít mụn, da khá sạch",
-  wrinkles: "Có nếp nhăn nhẹ ở khóe mắt",
-  freckles: "Một vài đốm tàn nhang nhỏ",
-  oiliness: "Da hỗn hợp, vùng chữ T hơi dầu",
-  elasticity: "Độ đàn hồi tốt, da săn chắc",
-  tone: "Sáng vừa, hơi ngả vàng",
-  texture: "Mịn, lỗ chân lông nhỏ",
+  acne: "Ít mụn, da khá sạch, có 1-2 mụn đầu đen nhỏ",
+  wrinkles: "Có nếp nhăn nhẹ ở khóe mắt và trán, dấu hiệu lão hóa sớm",
+  freckles: "Một vài đốm tàn nhang nhỏ ở gò má, không đáng kể",
+  oiliness: "Da hỗn hợp, vùng chữ T hơi dầu, vùng má khô",
+  elasticity: "Độ đàn hồi tốt, da săn chắc, collagen còn tốt",
+  tone: "Sáng vừa, hơi ngả vàng, undertone ấm",
+  texture: "Mịn, lỗ chân lông nhỏ, bề mặt da đều màu",
   skinType: "Combination (Da hỗn hợp)",
-  aiResponse: "Da bạn thuộc loại hỗn hợp, cần chú ý dưỡng ẩm vùng má và kiểm soát dầu vùng trán, mũi."
+  aiResponse: "Dựa trên phân tích, da bạn thuộc loại hỗn hợp với xu hướng khô ở vùng má và dầu ở vùng chữ T. Cần chú ý dưỡng ẩm vùng má và kiểm soát dầu vùng trán, mũi. Nên sử dụng sản phẩm cân bằng, tránh sản phẩm quá khô hoặc quá dầu. Kem chống nắng là bắt buộc để ngăn chặn lão hóa sớm."
+}
+
+// Helper function to map skin type to product category
+const getSkinTypeCategory = (skinType: string): string => {
+  const lowerType = skinType.toLowerCase()
+  if (lowerType.includes("combination") || lowerType.includes("hỗn hợp")) return "Combination"
+  if (lowerType.includes("dry") || lowerType.includes("khô")) return "Dry"
+  if (lowerType.includes("oily") || lowerType.includes("dầu")) return "Oily"
+  if (lowerType.includes("sensitive") || lowerType.includes("nhạy cảm")) return "Sensitive"
+  return "Combination" // default
 }
 
 export function ColorAnalysisDemo() {
@@ -115,7 +125,7 @@ export function ColorAnalysisDemo() {
   return (
     <Card className="bg-white/80 backdrop-blur-sm border border-purple-100">
       <CardContent className="p-6">
-        <h3 className="text-lg font-bold text-gray-800 mb-4 text-center">Thử nghiệm phân tích da</h3>
+        <h3 className="text-lg font-bold text-gray-800 mb-4 text-center">Thử nghiệm phân tích da chuyên nghiệp</h3>
         {error && (
           <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
             <p className="text-red-600 text-sm">{error}</p>
@@ -162,7 +172,7 @@ export function ColorAnalysisDemo() {
                 </div>
               </div>
               <div>
-                <p className="text-gray-600 mb-2">Tải ảnh lên để phân tích da</p>
+                <p className="text-gray-600 mb-2">Tải ảnh lên để phân tích da chuyên nghiệp</p>
                 <p className="text-sm text-gray-500 mb-4">Kéo thả ảnh vào đây hoặc click để chọn file</p>
                 <div className="flex gap-2 justify-center">
                   <Button
@@ -201,7 +211,7 @@ export function ColorAnalysisDemo() {
         {analysisResult && (
           <div className="space-y-6">
             <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg p-4">
-              <h4 className="font-bold text-purple-600 mb-2">🔬 Kết quả phân tích da</h4>
+              <h4 className="font-bold text-purple-600 mb-2">🔬 Kết quả phân tích da chuyên nghiệp</h4>
               <table className="w-full text-sm text-left mt-2">
                 <tbody>
                   <tr><td className="font-semibold pr-2">Mụn:</td><td>{analysisResult.acne}</td></tr>
@@ -216,13 +226,45 @@ export function ColorAnalysisDemo() {
               </table>
               {analysisResult.aiResponse && (
                 <div className="mt-4 p-3 bg-blue-50 border border-blue-100 rounded">
-                  <div className="font-semibold mb-1 text-blue-700">Phân tích chi tiết:</div>
+                  <div className="font-semibold mb-1 text-blue-700">💡 Lời khuyên chuyên môn:</div>
                   <div className="text-sm text-gray-700 whitespace-pre-line">{analysisResult.aiResponse}</div>
                 </div>
               )}
             </div>
-            {/* Recommended Products */}
-            <ProductRecommendations limit={6} />
+            
+            {/* Skincare Recommendations */}
+            <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-4">
+              <h4 className="font-bold text-green-700 mb-3">🧴 Gợi ý quy trình chăm sóc da</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <h5 className="font-semibold text-green-600 mb-2">🌅 Buổi sáng:</h5>
+                  <ol className="list-decimal list-inside space-y-1 text-gray-700">
+                    <li>Sữa rửa mặt dịu nhẹ</li>
+                    <li>Toner cân bằng pH</li>
+                    <li>Serum Vitamin C</li>
+                    <li>Kem dưỡng ẩm</li>
+                    <li>Kem chống nắng SPF 30+</li>
+                  </ol>
+                </div>
+                <div>
+                  <h5 className="font-semibold text-blue-600 mb-2">🌙 Buổi tối:</h5>
+                  <ol className="list-decimal list-inside space-y-1 text-gray-700">
+                    <li>Tẩy trang (nếu trang điểm)</li>
+                    <li>Sữa rửa mặt</li>
+                    <li>Toner</li>
+                    <li>Serum điều trị</li>
+                    <li>Kem dưỡng ẩm</li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+            
+            {/* General Product Recommendations */}
+            <ProductRecommendations 
+              limit={6} 
+              random={true}
+              skinType={getSkinTypeCategory(analysisResult.skinType)}
+            />
           </div>
         )}
       </CardContent>

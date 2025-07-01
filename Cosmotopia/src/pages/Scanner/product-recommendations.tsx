@@ -23,13 +23,17 @@ interface ProductRecommendationsProps {
   category?: string
   limit?: number
   showTitle?: boolean
+  random?: boolean
+  skinType?: string
 }
 
 export function ProductRecommendations({ 
   season, 
   category, 
   limit = 6, 
-  showTitle = true 
+  showTitle = true, 
+  random = false, 
+  skinType 
 }: ProductRecommendationsProps) {
   const [products, setProducts] = useState<Product[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -42,23 +46,44 @@ export function ProductRecommendations({
     "Mùa Đông": ["deep", "plum", "winter", "cool", "dark", "đông"]
   }
 
+  const skinTypeKeywords = {
+    "Dry": ["dưỡng ẩm", "moisturizing", "hydrating", "nourishing", "rich", "cream"],
+    "Oily": ["kiểm soát dầu", "oil control", "mattifying", "sebum", "gel", "lightweight"],
+    "Combination": ["cân bằng", "balancing", "combination", "mixed", "versatile"],
+    "Sensitive": ["dịu nhẹ", "gentle", "sensitive", "calming", "soothing", "fragrance-free"]
+  }
+
+  // Helper to normalize product data
+  const cleanProductData = (product: any): Product => ({
+    id: String(product.productId || ''),
+    name: String(product.name || ''),
+    price: Number(product.price || 0),
+    image: Array.isArray(product.imageUrls) && product.imageUrls.length > 0 ? String(product.imageUrls[0]) : '',
+    category: product.category?.name || '',
+    brand: product.brand?.name || '',
+    rating: product.rating || 0,
+    description: String(product.description || ''),
+    stock: Number(product.stockQuantity || 0),
+  })
+
   const fetchProducts = async () => {
     try {
       setIsLoading(true)
       setError(null)
-      
-      const response = await BaseRequest.Get("api/Product/GetAllProduct")
-      
-      if (response && response.data) {
-        let allProducts: Product[] = response.data
-        
+      // Use full backend URL
+      const response = await fetch('https://localhost:7191/api/Product/GetAllProduct')
+      const data = await response.json()
+      console.log('Full API response:', data)
+      const productsArr = Array.isArray(data.products) ? data.products.map(cleanProductData) : []
+      if (productsArr.length > 0) {
+        let allProducts: Product[] = productsArr
+        console.log('All products before filter:', allProducts)
         // Filter by category if specified
         if (category) {
           allProducts = allProducts.filter(product => 
             product.category.toLowerCase().includes(category.toLowerCase())
           )
         }
-        
         // Filter by season keywords if specified
         if (season) {
           const keywords = seasonKeywords[season as keyof typeof seasonKeywords] || []
@@ -71,17 +96,40 @@ export function ProductRecommendations({
             )
           )
         }
-        
-        // Sort by rating and limit results
-        const sortedProducts = allProducts
-          .sort((a, b) => (b.rating || 0) - (a.rating || 0))
-          .slice(0, limit)
-        
-        setProducts(sortedProducts)
+        // Filter by skin type if specified
+        if (skinType) {
+          const keywords = skinTypeKeywords[skinType as keyof typeof skinTypeKeywords] || []
+          const filtered = allProducts.filter(product => 
+            keywords.some(keyword => 
+              product.name.toLowerCase().includes(keyword) ||
+              product.description?.toLowerCase().includes(keyword) ||
+              product.category.toLowerCase().includes(keyword) ||
+              product.brand.toLowerCase().includes(keyword)
+            )
+          )
+          console.log('Filtered by skinType:', filtered)
+          if (filtered.length > 0) {
+            allProducts = filtered
+          }
+        }
+        let selectedProducts: Product[]
+        if (random) {
+          const shuffled = [...allProducts].sort(() => 0.5 - Math.random())
+          selectedProducts = shuffled.slice(0, limit)
+        } else {
+          selectedProducts = allProducts
+            .sort((a, b) => (b.rating || 0) - (a.rating || 0))
+            .slice(0, limit)
+        }
+        console.log('Selected products:', selectedProducts)
+        setProducts(selectedProducts)
+      } else {
+        console.log('Không tìm thấy trường products trong response:', data)
+        setProducts([])
       }
     } catch (error) {
-      console.error("Error fetching products:", error)
-      setError("Không thể tải sản phẩm. Vui lòng thử lại sau.")
+      console.error('Error fetching products:', error)
+      setError('Không thể tải sản phẩm. Vui lòng thử lại sau.')
     } finally {
       setIsLoading(false)
     }
@@ -89,7 +137,7 @@ export function ProductRecommendations({
 
   useEffect(() => {
     fetchProducts()
-  }, [season, category, limit])
+  }, [season, category, limit, random, skinType])
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -170,6 +218,15 @@ export function ProductRecommendations({
     )
   }
 
+  // Group products by category
+  const groupedProducts = products.reduce((acc, product) => {
+    if (!acc[product.category]) acc[product.category] = []
+    acc[product.category].push(product)
+    return acc
+  }, {} as Record<string, Product[]>)
+
+  const CATEGORY_ORDER = ["Fragrance", "Skincare", "Haircare", "Makeup"]
+
   return (
     <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-4">
       {showTitle && (
@@ -179,72 +236,71 @@ export function ProductRecommendations({
           {season && <span className="text-sm text-gray-600 ml-2">({season})</span>}
         </h5>
       )}
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {products.map((product) => (
-          <Card key={product.id} className="bg-white hover:shadow-lg transition-all duration-300 group">
-            <CardContent className="p-3">
-              <div className="relative">
-                <div className="aspect-square bg-gray-100 rounded-lg mb-3 flex items-center justify-center overflow-hidden">
-                  {product.image ? (
-                    <img 
-                      src={product.image} 
-                      alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  ) : (
-                    <div className="text-gray-400 text-xs text-center">No Image</div>
-                  )}
-                  
-                  {/* Wishlist button */}
-                  <button
-                    onClick={() => handleAddToWishlist(product)}
-                    className="absolute top-2 right-2 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center hover:bg-white transition-colors"
-                  >
-                    <Heart className="w-4 h-4 text-gray-600 hover:text-red-500 transition-colors" />
-                  </button>
-                </div>
-                
-                <h6 className="font-medium text-sm text-gray-800 mb-2 line-clamp-2 min-h-[2.5rem]">
-                  {product.name}
-                </h6>
-                
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-purple-600 font-semibold text-sm">
-                    {formatPrice(product.price)}
-                  </span>
-                  {product.rating && (
-                    <div className="flex items-center text-xs text-gray-500">
-                      <Star className="w-3 h-3 fill-yellow-400 text-yellow-400 mr-1" />
-                      {product.rating}
+      {CATEGORY_ORDER.map(category => (
+        groupedProducts[category] && groupedProducts[category].length > 0 && (
+          <div key={category} className="mb-8">
+            <h4 className="font-bold text-lg mb-4">{category}</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {groupedProducts[category].map(product => (
+                <Card key={product.id} className="bg-white hover:shadow-lg transition-all duration-300 group">
+                  <CardContent className="p-3">
+                    <div className="relative">
+                      <div className="aspect-square bg-gray-100 rounded-lg mb-3 flex items-center justify-center overflow-hidden">
+                        {product.image ? (
+                          <img 
+                            src={product.image} 
+                            alt={product.name}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                        ) : (
+                          <div className="text-gray-400 text-xs text-center">No Image</div>
+                        )}
+                        {/* Wishlist button */}
+                        <button
+                          onClick={() => handleAddToWishlist(product)}
+                          className="absolute top-2 right-2 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center hover:bg-white transition-colors"
+                        >
+                          <Heart className="w-4 h-4 text-gray-600 hover:text-red-500 transition-colors" />
+                        </button>
+                      </div>
+                      <h6 className="font-medium text-sm text-gray-800 mb-2 line-clamp-2 min-h-[2.5rem]">
+                        {product.name}
+                      </h6>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-purple-600 font-semibold text-sm">
+                          {formatPrice(product.price)}
+                        </span>
+                        {product.rating && (
+                          <div className="flex items-center text-xs text-gray-500">
+                            <Star className="w-3 h-3 fill-yellow-400 text-yellow-400 mr-1" />
+                            {product.rating}
+                          </div>
+                        )}
+                      </div>
+                      <p className="text-xs text-gray-500 mb-3">{product.brand}</p>
+                      <div className="flex gap-2">
+                        <Button
+                          onClick={() => handleProductClick(product)}
+                          size="sm"
+                          className="flex-1 bg-purple-500 hover:bg-purple-600 text-white text-xs"
+                        >
+                          <ExternalLink className="w-3 h-3 mr-1" />
+                          Xem chi tiết
+                        </Button>
+                      </div>
+                      {product.stock !== undefined && (
+                        <p className="text-xs text-gray-500 mt-2">
+                          Còn lại: {product.stock} sản phẩm
+                        </p>
+                      )}
                     </div>
-                  )}
-                </div>
-                
-                <p className="text-xs text-gray-500 mb-3">{product.brand}</p>
-                
-                <div className="flex gap-2">
-                  <Button
-                    onClick={() => handleProductClick(product)}
-                    size="sm"
-                    className="flex-1 bg-purple-500 hover:bg-purple-600 text-white text-xs"
-                  >
-                    <ExternalLink className="w-3 h-3 mr-1" />
-                    Xem chi tiết
-                  </Button>
-                </div>
-                
-                {product.stock !== undefined && (
-                  <p className="text-xs text-gray-500 mt-2">
-                    Còn lại: {product.stock} sản phẩm
-                  </p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-      
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )
+      ))}
       {products.length > 0 && (
         <div className="text-center mt-4">
           <Button

@@ -52,7 +52,7 @@ axios.interceptors.request.use(onRequestSuccess, onRequestError);
 axios.interceptors.response.use(onResponseSuccess, onResponseError);
 axios.defaults.baseURL = baseURL;
 export const api = axios;
-var BaseRequest = {
+const BaseRequest = {
   Get: async (url: string) => {
     try {
       const response = await axios.get(url);
@@ -71,10 +71,13 @@ var BaseRequest = {
   },
   Post: async (url: string, data?: any) => {
     try {
+      console.log('BaseRequest.Post - Sending request to:', url, 'with data:', data);
       const response = await axios.post<any>(url, data);
-      return response.data;
+      console.log('BaseRequest.Post - Response received:', response);
+      return response;
     } catch (err) {
-      console.log('err', err);
+      console.error('BaseRequest.Post - Error occurred:', err);
+      throw err;
     }
   },
   PostWithOutResponse: async (url: string, data?: any) => {
@@ -151,7 +154,7 @@ var BaseRequest = {
       });
       const fileName = __helpers.getFileName(name);
 
-      //@ts-ignore
+      //@ts-expect-error: response có thể không đúng kiểu Blob, bỏ qua lỗi này để tạo Blob
       const blob = new Blob([response], { type: 'application/pdf' });
       const urlBlob = URL.createObjectURL(blob);
 
@@ -176,7 +179,7 @@ var BaseRequest = {
         responseType: 'blob'
       });
 
-      //@ts-ignore
+      //@ts-expect-error: response có thể không đúng kiểu Blob, bỏ qua lỗi này để tạo Blob
       const blob = new Blob([response], { type: 'application/pdf' });
       const urlBlob = URL.createObjectURL(blob);
 

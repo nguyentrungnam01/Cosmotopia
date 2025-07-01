@@ -6,7 +6,7 @@ import { useEffect, useLayoutEffect, useState } from 'react';
 import { Toaster } from '@/components/ui/toaster';
 import { useDispatch } from 'react-redux';
 import { updateCart, updateTotalItems } from '@/redux/cart.slice';
-import { useGetOrderUserByStatus } from '@/queries/cart.query';
+// import { useGetOrderUserByStatus } from '@/queries/cart.query';
 import { PagingModel } from '@/constants/data';
 import Footer from '../shared/footer';
 import { ProfileSidebar } from '@/pages/ProfilePage/Sidebar';
@@ -17,7 +17,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
-  const { mutateAsync: getOrderByStatus } = useGetOrderUserByStatus();
+  // const { mutateAsync: getOrderByStatus } = useGetOrderUserByStatus();
 
   var token = helper.cookie_get('AT');
   const dispatch = useDispatch();
@@ -27,15 +27,15 @@ export default function DashboardLayout({
     }
   }, []);
 
-  useEffect(() => {
-    const fetch = async () => {
-      let model = { ...PagingModel, orderStatus: 1 };
-      var data = await getOrderByStatus(model);
-      dispatch(updateCart(data));
-      dispatch(updateTotalItems(data?.listObjects?.length));
-    };
-    fetch();
-  }, []);
+  // useEffect(() => {
+  //   const fetch = async () => {
+  //     let model = { ...PagingModel, orderStatus: 1 };
+  //     var data = await getOrderByStatus(model);
+  //     dispatch(updateCart(data));
+  //     dispatch(updateTotalItems(data?.listObjects?.length));
+  //   };
+  //   fetch();
+  // }, []);
 
   return (
     <div className="flex min-h-screen flex-col justify-between overflow-visible bg-white ">

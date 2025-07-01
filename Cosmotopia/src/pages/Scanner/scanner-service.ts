@@ -74,11 +74,20 @@ export class ScannerService {
    */
   async sendChatMessage(message: ChatMessage): Promise<any> {
     try {
-      const response = await BaseRequest.Post("api/Chat", message)
-      return response
+      console.log('ScannerService.sendChatMessage - Sending message:', message);
+      const response = await BaseRequest.Post("api/Chat", message);
+      console.log('ScannerService.sendChatMessage - Response received:', response);
+      
+      // Kiểm tra response có hợp lệ không
+      if (!response) {
+        console.error('ScannerService.sendChatMessage - Response is null/undefined');
+        throw new Error("Không nhận được phản hồi từ server");
+      }
+      
+      return response;
     } catch (error) {
-      console.error("Error sending chat message:", error)
-      throw new Error("Không thể gửi tin nhắn. Vui lòng thử lại sau.")
+      console.error("ScannerService.sendChatMessage - Error occurred:", error);
+      throw new Error("Không thể gửi tin nhắn. Vui lòng thử lại sau.");
     }
   }
 
