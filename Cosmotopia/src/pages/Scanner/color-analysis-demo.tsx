@@ -5,6 +5,7 @@ import type React from "react"
 import { useState, useRef } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+
 import { Upload, Sparkles, X, Camera } from "lucide-react"
 import { ProductRecommendations } from "./product-recommendations"
 import { scannerService } from "./scanner-service"

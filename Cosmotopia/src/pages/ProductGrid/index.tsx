@@ -6,11 +6,11 @@ import { useSearchParams } from "react-router-dom";
 export default function Page() {
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get("query") || "";
-  // Giả sử các filter là các mảng chứa id của lựa chọn
   const [filters, setFilters] = useState({
     categories: [] as string[],
     brands: [] as string[],
     prices: [] as string[],
+    topSelling: [] as string[],
     search: searchQuery,
   });
 

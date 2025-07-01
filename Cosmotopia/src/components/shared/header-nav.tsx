@@ -69,7 +69,7 @@ export default function HeaderNav({
           <li>
             <button
               onClick={() => router.push("/productGrid")}
-              className="text-gray-600 transition-colors duration-200 hover:text-gray-900 focus:outline-none"
+              className="text-gray-600 transition-colors duration-200 hover:text-purple-600 focus:outline-none"
             >
               Sản phẩm
             </button>
@@ -77,14 +77,17 @@ export default function HeaderNav({
           <li>
             <a
               href="#"
-              className="text-gray-600 transition-colors duration-200 hover:text-gray-900"
+              className="text-gray-600 transition-colors duration-200 hover:text-purple-600"
             >
               Top Brand
             </a>
           </li>
           <li>
             <a
-              className="text-gray-600 transition-colors duration-200 hover:text-gray-900"
+              className="text-gray-600 transition-colors duration-200 hover:text-purple-600"
+              onClick={() =>
+                router.push(`/reviews`)
+              }
             >
               Top Reviews
             </a>
@@ -94,7 +97,7 @@ export default function HeaderNav({
               onClick={() =>
                 router.push(`/scanner`)
               }
-              className="text-gray-600 transition-colors duration-200 hover:text-gray-900 cursor-pointer"
+              className="text-gray-600 transition-colors duration-200 hover:text-purple-600 cursor-pointer"
             >
               Personal color test
             </a>
@@ -102,7 +105,7 @@ export default function HeaderNav({
           {/* <li>
             <a
               href="#"
-              className="text-gray-600 transition-colors duration-200 hover:text-gray-900"
+              className="text-gray-600 transition-colors duration-200 hover:text-purple-600"
             >
               Lorem
             </a>

@@ -88,6 +88,7 @@
     "remark-gfm": "^4.0.1",
     "sonner": "^1.4.41",
     "styled-components": "^6.1.13",
+    "swiper": "^11.2.9",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7",
     "timezone": "^1.0.23",

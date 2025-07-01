@@ -39,7 +39,7 @@ export const useGetListProductsByPaging = ({ page, pageSize, search, filters }: 
           queryParams.append("sortBy", filters.prices.join(","));
         }
       }
-      console.log("Query: ",queryParams.toString());
+      console.log("Query: ", queryParams.toString());
       const url = `/${SUB_URL}/GetAllProduct?${queryParams.toString()}`;
       return await BaseRequest.Get2(url);
     },
@@ -55,3 +55,12 @@ export const useGetDetailProduct = (id?: string) => {
     },
   });
 };
+
+export const useGetTopSellingProducts = () => {
+  return useQuery({
+    queryKey: ['get_top_selling_product'],
+    queryFn: async () => {
+      return BaseRequest.Get2(`/${SUB_URL}/GetTopSellingProducts?top=6`);
+    }
+  })
+}

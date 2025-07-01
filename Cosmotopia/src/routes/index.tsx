@@ -19,6 +19,8 @@ import { Navigate, Outlet, useRoutes } from 'react-router-dom';
 
 import ScreenScanner from '@/pages/Scanner/screen-scanner';
 
+import ReviewPage from '@/pages/ReviewPage';
+
 const SystemLayout = lazy(() => import('@/components/layout/layout'));
 const ProfileLayout = lazy(() => import('@/components/layout/layoutProfile'));
 const HomePage = lazy(() => import('@/pages/Home/index'));
@@ -91,6 +93,15 @@ export default function AppRouter() {
           element: (
             <ProtectedRoute allowedRoles={['Guest', 'Customers', 'Affiliates']}>
               <ScreenScanner />,
+            </ProtectedRoute>
+          ),
+          index: true
+        },
+        {
+          path: '/reviews',
+          element: (
+            <ProtectedRoute allowedRoles={['Guest', 'Customers', 'Affiliates']}>
+              <ReviewPage />,
             </ProtectedRoute>
           ),
           index: true
