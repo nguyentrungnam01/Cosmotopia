@@ -1,4 +1,3 @@
-
 import { useState } from "react"
 // import Image from "next/image"
 import { Image } from "antd"
@@ -10,6 +9,7 @@ import { ColorAnalysisDemo } from "./color-analysis-demo"
 import { FAQSection } from "./faq-section"
 import { PremiumUpgrade } from "./premium-upgrade"
 import ColorTestImage from "@/assets/color-test-1.png";
+import { AIChatbot } from "./ai-chatbot"
 
 export default function ScreenScanner() {
   const [activeTab, setActiveTab] = useState("demo")
@@ -248,6 +248,7 @@ export default function ScreenScanner() {
           </div>
         </div>
       </div>
+      <AIChatbot />
     </div>
   )
 }
