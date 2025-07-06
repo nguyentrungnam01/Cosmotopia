@@ -111,7 +111,8 @@ export default function KOLPage() {
                 itemActiveBg: '#none',
                 itemBg: '#none',
                 itemSelectedBg: 'transparent',
-                itemSelectedColor: '#none'
+                itemSelectedColor: '#none',
+                // fontFamily: 'Monsterrat, sans-serif',
               }
             }
           }}

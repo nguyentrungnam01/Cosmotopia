@@ -1,34 +1,37 @@
 // src/pages/ReviewPage/index.tsx
-import { ChevronRight } from 'lucide-react';
-// import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css';
 
-// Shared components
+import { useState, useRef } from 'react';
 import BasePages from '@/components/shared/base-pages';
-import VideoTutorialsSection from './VideoCard';
-import KOLDealsSection from './CouponCard';
-import MakeupTones from '@/components/shared/style';
-// import { useRouter } from '@/routes/hooks';
-import TopKOLSection from './TopKOLSection';
 import VideoHotSection from './HotVideoSection';
 import HeroSection from './HeroSection';
+import VideoTutorialsSection from './VideoCard';
+import TopKOLSection from './TopKOLSection';
+import KOLDealsSection from './CouponCard';
+import MakeupTones from '@/components/shared/style';
+
 export default function ReviewPage() {
-  // const router = useRouter();
+  const [selectedVideoId, setSelectedVideoId] = useState<string>("");
+  const heroSectionRef = useRef<HTMLDivElement>(null);
+
+  const handleVideoSelect = (videoId: string) => {
+    setSelectedVideoId(videoId);
+    
+    if (heroSectionRef.current) {
+      window.scrollTo({
+        top: heroSectionRef.current.offsetTop,
+        behavior: 'smooth',
+      });
+    }
+  };
 
   return (
     <div className="bg-white">
       <BasePages pageHead="Review">
-        {/* Hero Video */}
-        <HeroSection/>
-        {/* Hot Review Videos */}
-        <VideoHotSection/>
-        {/* Tutorial Videos */}
-        <VideoTutorialsSection />
-        {/*Top KOL*/}
+        <HeroSection videoId={selectedVideoId} ref={heroSectionRef}/>
+        <VideoHotSection onVideoSelect={handleVideoSelect} />
+        <VideoTutorialsSection onVideoSelect={handleVideoSelect}/>
         <TopKOLSection />
-        {/* Coupons */}
         <KOLDealsSection />
-        {/* Makeup Tones */}
         <MakeupTones />
       </BasePages>
     </div>
