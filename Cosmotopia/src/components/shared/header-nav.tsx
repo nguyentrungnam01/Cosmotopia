@@ -76,20 +76,20 @@ export default function HeaderNav({
           </li>
           <li>
             <a
-              href="#"
-              className="text-gray-600 transition-colors duration-200 hover:text-purple-600"
+              onClick={() => router.push("/productGrid")}
+              className="text-gray-600 transition-colors duration-200 hover:text-purple-600 cursor-pointer"
             >
-              Top Brand
+              Hot sale
             </a>
           </li>
           <li>
             <a
-              className="text-gray-600 transition-colors duration-200 hover:text-purple-600"
+              className="text-gray-600 transition-colors duration-200 hover:text-purple-600 cursor-pointer"
               onClick={() =>
                 router.push(`/reviews`)
               }
             >
-              Top Reviews
+              Top Review
             </a>
           </li>
           <li>
@@ -99,7 +99,7 @@ export default function HeaderNav({
               }
               className="text-gray-600 transition-colors duration-200 hover:text-purple-600 cursor-pointer"
             >
-              Personal color test
+              Personal Color Test
             </a>
           </li>
           {/* <li>

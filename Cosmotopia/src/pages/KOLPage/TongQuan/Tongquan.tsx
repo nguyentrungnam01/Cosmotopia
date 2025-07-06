@@ -1,5 +1,5 @@
 import __helpers from '@/helpers';
-import { getEarningSummary, getTop5Link } from '@/queries/affilate.api';
+import { getAffiliateProfile, getTop5Link } from '@/queries/affilate.api';
 import { Image } from 'antd';
 import React, { FC } from 'react';
 import { useState, useEffect } from 'react';
@@ -28,14 +28,13 @@ export const Tongquan: FC<TongquanProps> = ({}) => {
   const getData = () => {
     console.log('oke');
 
-    // setDataTable(fakeData);
     getTop5Link()
       .then((data) => {
         setData(data);
-        getEarningSummary()
+        getAffiliateProfile()
           .then((res) => {
-            console.log(res);
-            setDataSum(res);
+            console.log("Response: ",res);
+            setDataSum(res.data);
           })
           .catch((error) => {
             console.log(error);
@@ -51,14 +50,14 @@ export const Tongquan: FC<TongquanProps> = ({}) => {
     getData();
     const updateDate = () => {
       const now = new Date();
-      const formattedDate = now.toLocaleDateString('vi-VN'); // Định dạng theo Việt Nam (dd/mm/yyyy)
+      const formattedDate = now.toLocaleDateString('vi-VN'); 
       setCurrentDate(formattedDate);
     };
         
-    updateDate(); // Cập nhật ngay khi component render
-    const interval = setInterval(updateDate, 1000); // Cập nhật mỗi giây
+    updateDate(); 
+    const interval = setInterval(updateDate, 1000); 
 
-    return () => clearInterval(interval); // Cleanup khi unmount
+    return () => clearInterval(interval); 
   }, []);
 
   return (
@@ -125,7 +124,7 @@ export const Tongquan: FC<TongquanProps> = ({}) => {
         </div>
 
         {/* Card 3 */}
-        {/* <div className="relative overflow-hidden rounded-xl bg-white p-4 shadow-md">
+        <div className="relative overflow-hidden rounded-xl bg-white p-4 shadow-md">
           <p className="mb-2 text-sm text-gray-600">Conversions</p>
           <h3 className="text-2xl font-bold">321</h3>
           <div className="mt-2 flex gap-1 text-xs">
@@ -138,10 +137,10 @@ export const Tongquan: FC<TongquanProps> = ({}) => {
             style={{ width: '55px' }}
             className="absolute right-1 top-1"
           />
-        </div> */}
+        </div>
 
         {/* Card 4 */}
-        {/* <div className="relative overflow-hidden rounded-xl bg-white p-4 shadow-md">
+        <div className="relative overflow-hidden rounded-xl bg-white p-4 shadow-md">
           <p className="mb-2 text-sm text-gray-600">CR</p>
           <h3 className="text-2xl font-bold">
             0,07 <span className="text-sm">%</span>
@@ -156,7 +155,7 @@ export const Tongquan: FC<TongquanProps> = ({}) => {
             style={{ width: '55px' }}
             className="absolute right-1 top-1"
           />
-        </div> */}
+        </div>
       </div>
       <div className="mt-6 rounded-2xl bg-white p-6 shadow-md">
         <h2 className="mb-4 text-xl font-semibold">Top 5 product earning</h2>
@@ -187,14 +186,14 @@ export const Tongquan: FC<TongquanProps> = ({}) => {
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-base ">Click</p>
+                  <p className="text-base">Click</p>
                   <p className="font-semibold text-gray-500">
                     {link.totalClicks}
                   </p>
                 </div>
                 <div className="text-right">
                   <p
-                    className="text-base underline"
+                    className="text-base underline cursor-pointer text-blue-500 menu-item"
                     onClick={() => {
                       window.open(
                         `/product/${link.productId}?ref=${link.referralCode}`

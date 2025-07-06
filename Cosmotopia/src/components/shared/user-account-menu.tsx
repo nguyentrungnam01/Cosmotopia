@@ -4,9 +4,9 @@ import PersonIcon from '@mui/icons-material/Person';
 import { Dropdown, MenuProps } from 'antd';
 import { Link } from 'react-router-dom';
 import helper from '@/helpers/index';
-import { useSelector } from 'react-redux';
-import authReducer from '@/redux/auth.slice';
-import { RootState } from '@/redux/store';
+// import { useSelector } from 'react-redux';
+// import authReducer from '@/redux/auth.slice';
+// import { RootState } from '@/redux/store';
 interface UserAccountMenuProps {
   auth: boolean;
   handleLogout?: () => void;
