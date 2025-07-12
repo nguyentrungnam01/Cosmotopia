@@ -4,7 +4,6 @@ import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ShoppingBag, Star, ExternalLink, Heart } from "lucide-react"
-import BaseRequest from "@/config/axios.config"
 
 interface Product {
   id: string

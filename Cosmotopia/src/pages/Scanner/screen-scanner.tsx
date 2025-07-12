@@ -10,6 +10,7 @@ import { FAQSection } from "./faq-section"
 import { PremiumUpgrade } from "./premium-upgrade"
 import ColorTestImage from "@/assets/color-test-1.png";
 import { AIChatbot } from "./ai-chatbot"
+import { EllipseBackground } from "./ellipse-backgrounds";
 
 export default function ScreenScanner() {
   const [activeTab, setActiveTab] = useState("demo")
@@ -65,6 +66,7 @@ export default function ScreenScanner() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100">
+      <EllipseBackground />
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Header */}
         <div className="text-center mb-12">

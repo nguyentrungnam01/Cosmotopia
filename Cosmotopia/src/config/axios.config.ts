@@ -71,13 +71,10 @@ const BaseRequest = {
   },
   Post: async (url: string, data?: any) => {
     try {
-      console.log('BaseRequest.Post - Sending request to:', url, 'with data:', data);
       const response = await axios.post<any>(url, data);
-      console.log('BaseRequest.Post - Response received:', response);
-      return response;
+      return response.data;
     } catch (err) {
-      console.error('BaseRequest.Post - Error occurred:', err);
-      throw err;
+      console.log('err', err);
     }
   },
   PostWithOutResponse: async (url: string, data?: any) => {
