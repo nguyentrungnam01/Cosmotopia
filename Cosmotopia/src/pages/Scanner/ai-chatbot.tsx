@@ -272,7 +272,7 @@ export function AIChatbot() {
           errorMessage += "• Kết nối bị timeout (quá 10 giây)\n• Vui lòng thử lại"
         } else if (error.message.includes("Failed to fetch")) {
           errorMessage +=
-            "• Không thể kết nối đến server\n• Kiểm tra xem server có đang chạy tại https://localhost:7191\n• Đảm bảo CORS được cấu hình đúng trên server"
+            "• Không thể kết nối đến server\n• Kiểm tra xem server có đang chạy tại https://cosmetics.azurewebsites.net\n• Đảm bảo CORS được cấu hình đúng trên server"
         } else if (error.message.includes("Server error")) {
           errorMessage += `• Lỗi server: ${error.message}\n• Vui lòng thử lại sau`
         } else {
@@ -508,7 +508,7 @@ export function AIChatbot() {
           const mappedInternalProducts = (internalProducts || []).slice(0, 3).map(p => ({
             name: p.name,
             link: `/product/${p.id}`,
-            image: p.image ? (p.image.startsWith('http') ? p.image : `https://localhost:7191${p.image}`) : undefined,
+            image: p.image ? (p.image.startsWith('http') ? p.image : `https://cosmetics.azurewebsites.net${p.image}`) : undefined,
             price: p.price ? scannerService.formatPrice(p.price) : undefined,
             source: 'internal' as const
           }))
@@ -522,7 +522,7 @@ export function AIChatbot() {
               .map(p => ({
                 name: p.name,
                 link: `/product/${p.id}`,
-                image: p.image ? (p.image.startsWith('http') ? p.image : `https://localhost:7191${p.image}`) : undefined,
+                image: p.image ? (p.image.startsWith('http') ? p.image : `https://cosmetics.azurewebsites.net${p.image}`) : undefined,
                 price: p.price ? scannerService.formatPrice(p.price) : undefined,
                 source: 'internal' as const
               })) : []

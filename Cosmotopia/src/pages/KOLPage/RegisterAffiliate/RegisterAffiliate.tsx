@@ -317,6 +317,7 @@ export const RegisterAffiliate: FC<RegisterAffiliateProps> = ({}) => {
 
           {(current == 0 || current == 2) && (
             <Button
+              className="bg-gradient-to-r from-purple-600 to-pink-500 text-white"
               type="primary"
               onClick={
                 current == 0
@@ -333,6 +334,7 @@ export const RegisterAffiliate: FC<RegisterAffiliateProps> = ({}) => {
 
           {current == 1 && (
             <Button
+              className='bg-gradient-to-r from-purple-600 to-pink-500 text-white'
               type="primary"
               onClick={async () => {
                 form.submit();

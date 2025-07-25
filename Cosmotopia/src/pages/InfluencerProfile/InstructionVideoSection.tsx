@@ -6,18 +6,12 @@ import { getAllVideosSystem } from "@/queries/affilate.api";
 import dayjs from "dayjs";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
-import type { KOLVideoDTO } from './types/video';
-interface ApiEnvelope<T> {
-  success: boolean;
-  message: string;
-  data: T;
-  statusCode?: number;
-}
+import type { KOLVideoDTO } from './types/influencer';
 
-interface VideoTutorialsSectionProps {
+interface InstructionVideoSectionProps {
+  affiliateProfileId?: string;
   onVideoSelect: (video: KOLVideoDTO) => void;
 }
-
 
 const extractYouTubeId = (url: string): string | null => {
   if (!url) return null;
@@ -34,7 +28,10 @@ const getThumbFromVideoUrl = (url: string) => {
   return "/placeholder-video.png";
 };
 
-export default function VideoTutorialsSection({ onVideoSelect }: VideoTutorialsSectionProps) {
+export default function InstructionVideoSection({
+  affiliateProfileId,
+  onVideoSelect,
+}: InstructionVideoSectionProps) {
   const [videos, setVideos] = useState<KOLVideoDTO[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -43,15 +40,22 @@ export default function VideoTutorialsSection({ onVideoSelect }: VideoTutorialsS
     let mounted = true;
     setLoading(true);
     getAllVideosSystem()
-      .then((res: ApiEnvelope<KOLVideoDTO[]>) => {
+      .then((res) => {
         if (!mounted) return;
         if (res.success && Array.isArray(res.data)) {
-          setVideos(res.data);
+          // Filter theo affiliateProfileId
+          const filtered = affiliateProfileId
+            ? res.data.filter(
+                (v: KOLVideoDTO) =>
+                  v.affiliateProfileId === affiliateProfileId
+              )
+            : res.data;
+          setVideos(filtered);
         } else {
           setError(res.message || "Không lấy được danh sách video");
         }
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
         if (mounted) setError("Lỗi tải video");
       })
@@ -61,7 +65,7 @@ export default function VideoTutorialsSection({ onVideoSelect }: VideoTutorialsS
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [affiliateProfileId]);
 
   return (
     <section className="relative w-full max-w-[1440px] mx-auto pt-8" style={{ height: "529px" }}>
@@ -70,7 +74,7 @@ export default function VideoTutorialsSection({ onVideoSelect }: VideoTutorialsS
           className="text-[44px] font-bold leading-[50px] text-[#32294B]"
           style={{ fontFamily: "Montserrat, sans-serif" }}
         >
-          Video hướng dẫn nổi bật
+          Video hướng dẫn
         </h2>
         <div className="flex items-center gap-2 cursor-pointer">
           <span
@@ -111,7 +115,7 @@ export default function VideoTutorialsSection({ onVideoSelect }: VideoTutorialsS
           >
             {videos.map((video) => {
               const thumb = getThumbFromVideoUrl(video.videoUrl);
-              const creatorName = "Creator"; // placeholder (chưa có trong DTO)
+              const creatorName = "Creator";
               const createdDate = dayjs(video.createdAt).format("DD-MM-YYYY");
               return (
                 <SwiperSlide key={video.videoId}>

@@ -31,17 +31,20 @@ const OrderTracking = lazy(() => import('@/pages/ProfilePage/OrderTracking'));
 const ProductGridPage = lazy(() => import('@/pages/ProductGrid/index'));
 const PaymentPage = lazy(() => import('@/pages/Payment/index'));
 const SuccessPage = lazy(() => import('@/pages/Payment/Success'));
+// const CreatorProfilePage = lazy(() => import('@/pages/ReviewPage/CreatorProfilePage'));
 import helper from '@/helpers/index';
 import KOLPage from '@/pages/KOLPage/KOLpage';
+// import { CreatorProfilePage } from '@/pages/ReviewPage/CreatorProfilePage';
 import { Tongquan } from '@/pages/KOLPage/TongQuan/Tongquan';
 import { ThongKe } from '@/pages/KOLPage/Thongke/ThongKe';
 import { DanhSach } from '@/pages/KOLPage/Danhsach/DanhSach';
 import { CreateLink } from '@/pages/KOLPage/CreateLink/CreateLink';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
+import { CreateVideo } from '@/pages/KOLPage/CreateVideo/CreateVideo';
+import { ManageVideo } from '@/pages/KOLPage/DanhSachVideo/ManageVideo';
 import { ChangePassWordPage } from '@/pages/ChangePassWordPage';
 import { Ballance } from '@/pages/KOLPage/Ballance/Ballance';
 import { Withdraw } from '@/pages/AdminPage/WithDraw/Withdraw';
+import InfluencerProfilePage from '@/pages/InfluencerProfile/index';
 import HandlePayment from '@/pages/Payment/HandlePayment';
 const AddressPage = lazy(() => import('@/pages/ProfilePage/AddressPage'));
 
@@ -102,6 +105,15 @@ export default function AppRouter() {
           element: (
             <ProtectedRoute allowedRoles={['Guest', 'Customers', 'Affiliates']}>
               <ReviewPage />,
+            </ProtectedRoute>
+          ),
+          index: true
+        },
+        {
+          path: '/influencer/:affiliateId',
+          element: (
+            <ProtectedRoute allowedRoles={['Guest', 'Customers', 'Affiliates']}>
+              <InfluencerProfilePage />,
             </ProtectedRoute>
           ),
           index: true
@@ -336,6 +348,16 @@ const KOLRoutes = [
       {
         path: '/kol/createLink',
         element: <CreateLink />
+        // index: true
+      },
+      {
+        path: '/kol/createVideo',
+        element: <CreateVideo />
+        // index: true
+      },
+      {
+        path: '/kol/manageVideo',
+        element: <ManageVideo />
         // index: true
       }
     ]

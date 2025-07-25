@@ -1,17 +1,5 @@
 import {
-  AppleOutlined,
-  AreaChartOutlined,
-  AuditOutlined,
-  BorderOutlined,
-  ContactsOutlined,
   HomeOutlined,
-  LogoutOutlined,
-  MenuOutlined,
-  ProductOutlined,
-  SettingOutlined,
-  ShoppingCartOutlined,
-  SolutionOutlined,
-  UserOutlined
 } from '@ant-design/icons';
 import cosmeLogo from '@/assets/logo/cosme_logo_2.png';
 import { ConfigProvider, Layout, Menu, theme } from 'antd';
@@ -24,6 +12,7 @@ import __helpers from '@/helpers';
 import { logout } from '@/redux/auth.slice';
 import './styles.css';
 import { RootState } from '@/redux/store';
+import { get } from 'http';
 function getItem(label: any, key: any, icon: any, children: any) {
   return {
     key,
@@ -65,6 +54,8 @@ export default function KOLPage() {
       //   getItem('Chiến dịch', 'category'),
       //   getItem('Hỗ trợ', 'order'),
       getItem('Tạo liên kết', 'createLink'),
+      getItem('Tạo video', 'createVideo'),
+      getItem('Quản lý video', 'manageVideo'),
       getItem('Quản lý số dư', 'ballance'),
       getItem('Thông tin cá nhân', 'profile')
     ]);

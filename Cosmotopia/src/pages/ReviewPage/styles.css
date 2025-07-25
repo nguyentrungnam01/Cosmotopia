@@ -1,0 +1,139 @@
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+/* Basic setup */
+body {
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  background-color: #FFFFFF;
+}
+
+.profile-page-container {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+/* --- Header Section --- */
+.profile-header {
+  position: relative;
+  height: 400px; /* Container height for header elements */
+  margin-bottom: 80px;
+}
+
+.header-cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 250px;
+  background-size: cover;
+  background-position: center;
+}
+
+.header-swoosh {
+  position: absolute;
+  top: 150px;
+  left: 0;
+  width: 100%;
+  height: 200px;
+  background-color: #DAA4FA;
+  border-bottom-left-radius: 50% 100%;
+  border-bottom-right-radius: 50% 100%;
+}
+
+.header-info-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  top: 290px;
+  left: 100px;
+  width: fit-content;
+}
+
+.creator-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 4px solid white;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+
+.creator-card {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  padding: 12px 24px 12px 70px; /* Left padding makes space for avatar */
+  margin-left: -60px; /* Pulls the card under the avatar */
+  border-radius: 16px;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.16);
+  height: 60px;
+  z-index: 1;
+}
+
+.creator-name {
+  font-size: 24px;
+  font-weight: 700;
+  color: #333;
+}
+
+/* --- Main Content --- */
+.main-content {
+  padding: 0 80px;
+}
+
+.video-section {
+  margin-bottom: 60px;
+}
+
+.section-title {
+  font-size: 36px;
+  font-weight: 700;
+  color: #32294B;
+  margin-bottom: 24px;
+}
+
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 columns for reviews */
+  gap: 24px;
+}
+
+/* --- Video Card --- */
+.video-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.video-thumbnail {
+  width: 100%;
+  aspect-ratio: 16 / 9.5;
+  object-fit: cover;
+  border-radius: 16px;
+}
+
+.video-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.video-author-details {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.author-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.author-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #000000;
+}

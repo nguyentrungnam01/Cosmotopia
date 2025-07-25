@@ -1,6 +1,7 @@
 import __helpers from '@/helpers';
-import { getAffiliateProfile, getTop5Link } from '@/queries/affilate.api';
+import { getAffiliateProfile, getTop5Link, getEarningSummary } from '@/queries/affilate.api';
 import { Image } from 'antd';
+import { get } from 'http';
 import React, { FC } from 'react';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -19,6 +20,7 @@ export const Tongquan: FC<TongquanProps> = ({}) => {
   const token = __helpers.cookie_get('AT');
   const userCookie = __helpers.cookie_get('user');
   const [data, setData] = useState([]);
+  const [dataClick, setDataClick] = useState(null);
   const [dataSum, setDataSum] = useState(null);
   console.log(data, 'data');
   const userObject =
@@ -46,6 +48,12 @@ export const Tongquan: FC<TongquanProps> = ({}) => {
       })
       .finally(() => {});
   };
+
+  getEarningSummary()
+    .then((res) => {
+      console.log("Click data: ",res);
+      setDataClick(res);
+    });
   useEffect(() => {
     getData();
     const updateDate = () => {
@@ -109,7 +117,7 @@ export const Tongquan: FC<TongquanProps> = ({}) => {
         <div className="relative overflow-hidden rounded-xl bg-white p-4 shadow-md">
           <p className="mb-2 text-sm text-gray-600">Tổng lượt click</p>
           <h3 className="text-2xl font-bold">
-            {dataSum?.totalClicks} <span className="text-sm">click</span>
+            {dataClick?.totalClicks} <span className="text-sm">click</span>
           </h3>
           {/* <div className="mt-2 flex gap-1 text-xs">
             <img src="/KOL/TongQuan/Up.svg" alt="" />{' '}

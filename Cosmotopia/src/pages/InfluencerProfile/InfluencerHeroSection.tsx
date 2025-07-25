@@ -1,17 +1,15 @@
-// src/pages/ReviewPage/HeroSection.tsx
 import { forwardRef, useMemo } from 'react';
 import ReviewBackground from '@/assets/kol/review_background.png';
-import type { KOLVideoDTO } from './types/video';
+import type { KOLVideoDTO } from './types/influencer';
 
 interface HeroSectionProps {
+  affiliateProfileId?: string; // Chỉ nhận để đồng bộ, không dùng bên trong component
   video: KOLVideoDTO | null;
 }
 
 const sanitizeEmbedUrl = (raw?: string) => {
   if (!raw) return '';
-  // Lấy phần trước dấu ? đầu tiên để tránh ?si=...?... lặp
   const [base, query] = raw.split('?');
-  // Giữ autoplay=1 & rel=0 & controls=1
   const params = new URLSearchParams(query || '');
   params.set('autoplay', '1');
   params.set('rel', '0');
@@ -19,12 +17,12 @@ const sanitizeEmbedUrl = (raw?: string) => {
   return `${base}?${params.toString()}`;
 };
 
-const HeroSection = forwardRef<HTMLDivElement, HeroSectionProps>(
-  ({ video }, ref) => {
+const InfluencerHeroSection = forwardRef<HTMLDivElement, HeroSectionProps>(
+  ({ affiliateProfileId, video }, ref) => {
 
     const embedUrl = useMemo(() => {
       if (!video?.videoUrl) {
-        // Fallback mặc định
+        // Fallback video nếu chưa có video nào được chọn
         return sanitizeEmbedUrl('https://www.youtube.com/embed/UY0Og8583jA?autoplay=1&rel=0');
       }
       return sanitizeEmbedUrl(video.videoUrl);
@@ -115,5 +113,5 @@ const HeroSection = forwardRef<HTMLDivElement, HeroSectionProps>(
   }
 );
 
-HeroSection.displayName = 'HeroSection';
-export default HeroSection;
+InfluencerHeroSection.displayName = 'HeroSection';
+export default InfluencerHeroSection;
