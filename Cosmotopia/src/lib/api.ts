@@ -20,7 +20,7 @@ export async function getStudents(
 export async function getUserDetail(userId: number) {
   try {
     const res = await axios.get(
-      `https://localhost:7191/api/UserDetail/get-user-detail?userId=12`
+      `https://cosmetics.azurewebsites.net/api/UserDetail/get-user-detail?userId=12`
     );
     return res.data;
   } catch (error) {

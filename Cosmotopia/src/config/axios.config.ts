@@ -6,7 +6,7 @@ import { message } from 'antd';
 
 // const baseURL =
   // 'https://cosmetics20250328083913-ajfsa0cegrdggzej.southeastasia-01.azurewebsites.net/';
-const baseURL = 'https://localhost:7191/';
+const baseURL = 'https://cosmetics.azurewebsites.net/';
 const token = helpers.cookie_get('AT');
 // const refreshToken = helpers.cookie_get('RT');
 

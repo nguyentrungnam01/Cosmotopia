@@ -70,7 +70,7 @@ export function ProductRecommendations({
       setIsLoading(true)
       setError(null)
       // Use full backend URL
-      const response = await fetch('https://localhost:7191/api/Product/GetAllProduct')
+      const response = await fetch('https://cosmetics.azurewebsites.net/api/Product/GetAllProduct')
       const data = await response.json()
       console.log('Full API response:', data)
       const productsArr = Array.isArray(data.products) ? data.products.map(cleanProductData) : []
