@@ -105,17 +105,15 @@ export default function ScreenScanner() {
           <div className="flex justify-center mb-6">
             <div className="bg-white/80 backdrop-blur-sm rounded-full p-1 border border-purple-200">
               <button
-                className={`px-6 py-2 rounded-full text-sm font-medium transition-colors ${
-                  activeTab === "demo" ? "bg-purple-500 text-white" : "text-purple-600 hover:bg-purple-50"
-                }`}
+                className={`px-6 py-2 rounded-full text-sm font-medium transition-colors ${activeTab === "demo" ? "bg-purple-500 text-white" : "text-purple-600 hover:bg-purple-50"
+                  }`}
                 onClick={() => setActiveTab("demo")}
               >
                 Thử nghiệm
               </button>
               <button
-                className={`px-6 py-2 rounded-full text-sm font-medium transition-colors ${
-                  activeTab === "pricing" ? "bg-purple-500 text-white" : "text-purple-600 hover:bg-purple-50"
-                }`}
+                className={`px-6 py-2 rounded-full text-sm font-medium transition-colors ${activeTab === "pricing" ? "bg-purple-500 text-white" : "text-purple-600 hover:bg-purple-50"
+                  }`}
                 onClick={() => setActiveTab("pricing")}
               >
                 Bảng giá
@@ -225,7 +223,7 @@ export default function ScreenScanner() {
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div className="relative">
               <Image
-                src= {ColorTestImage}
+                src={ColorTestImage}
                 alt="Color Scanner App Demo"
                 width={300}
                 height={400}
@@ -242,15 +240,17 @@ export default function ScreenScanner() {
                 <p>• Gợi ý màu son, trang phục và phụ kiện phù hợp</p>
                 <p>• Lưu kết quả để tham khảo sau này</p>
               </div>
-              <Button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white">
-                Tải ứng dụng ngay
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
+              <a href="/app-release.apk" download className="inline-block">
+                <Button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white">
+                  Tải ứng dụng ngay
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </a>
             </div>
           </div>
         </div>
       </div>
-      <AIChatbot />
+      {/* <AIChatbot /> */}
     </div>
   )
 }

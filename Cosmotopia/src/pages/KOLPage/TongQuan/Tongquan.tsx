@@ -134,7 +134,7 @@ export const Tongquan: FC<TongquanProps> = ({}) => {
         {/* Card 3 */}
         <div className="relative overflow-hidden rounded-xl bg-white p-4 shadow-md">
           <p className="mb-2 text-sm text-gray-600">Conversions</p>
-          <h3 className="text-2xl font-bold">321</h3>
+          <h3 className="text-2xl font-bold">52</h3>
           <div className="mt-2 flex gap-1 text-xs">
             <img src="/KOL/TongQuan/Up.svg" alt="" />{' '}
             <span className="text-green-500">8.5%</span> so với tuần trước

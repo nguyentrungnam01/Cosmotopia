@@ -24,7 +24,6 @@ import {
   Upload
 } from 'antd';
 import React, { FC, useEffect, useState } from 'react';
-import cosmeLogo from '@/assets/logo/cosme_logo_2.png';
 interface ProductProps {}
 
 export const Product: FC<ProductProps> = ({}) => {

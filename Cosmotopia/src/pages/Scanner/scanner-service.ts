@@ -75,7 +75,7 @@ export class ScannerService {
   async sendChatMessage(message: ChatMessage): Promise<any> {
     try {
       console.log('ScannerService.sendChatMessage - Sending message:', message);
-      const response = await BaseRequest.Post("api/Chat", message);
+      const response = await BaseRequest.PostWithOutResponse("api/Chat", message);
       console.log('ScannerService.sendChatMessage - Response received:', response);
       
       // Kiểm tra response có hợp lệ không
