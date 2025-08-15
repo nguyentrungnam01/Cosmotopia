@@ -90,7 +90,7 @@ body {
   margin: 0;
 }
 .custom-pagination .ant-pagination-item {
-  border-color: #9C3CFD;
+  /* border-color: #9C3CFD; */
 }
 
 .custom-pagination .ant-pagination-item:hover {
@@ -109,7 +109,7 @@ body {
 
 /* Text mặc định của các ô page */
 .custom-pagination .ant-pagination-item a {
-  color: #9C3CFD;
+  /* color: #9C3CFD; */
 }
 
 /* Hover lên các ô page */

@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { updateCart, updateTotalItems } from '@/redux/cart.slice';
 import { useGetOrderUserByStatus } from '@/queries/cart.query';
 import { PagingModel } from '@/constants/data';
+import { AIChatbot } from '@/pages/Scanner/ai-chatbot';
 import Footer from '../shared/footer';
 export default function DashboardLayout({
   children
@@ -44,6 +45,8 @@ export default function DashboardLayout({
       <Sidebar />
 
       <main className="flex-1 overflow-y-auto bg-[#FBFBFB]">{children}</main>
+      <AIChatbot />
+      {/* <Footer /> */}
       <Footer />
       <Toaster />
     </div>
