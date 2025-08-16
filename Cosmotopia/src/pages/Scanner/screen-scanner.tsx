@@ -1,5 +1,4 @@
 import { useState } from "react"
-// import Image from "next/image"
 import { Image } from "antd"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -9,12 +8,13 @@ import { ColorAnalysisDemo } from "./color-analysis-demo"
 import { FAQSection } from "./faq-section"
 import { PremiumUpgrade } from "./premium-upgrade"
 import ColorTestImage from "@/assets/color-test-1.png";
-import { AIChatbot } from "./ai-chatbot"
 import { EllipseBackground } from "./ellipse-backgrounds";
+import { useToast } from "@/components/ui/use-toast"
 
 export default function ScreenScanner() {
   const [activeTab, setActiveTab] = useState("demo")
   const [showPremiumUpgrade, setShowPremiumUpgrade] = useState(false)
+  const { toast } = useToast()
 
   const testimonials = [
     {
@@ -126,7 +126,7 @@ export default function ScreenScanner() {
           {activeTab === "pricing" && (
             <div className="grid md:grid-cols-2 gap-6">
               {/* Free Plan */}
-              <Card className="relative overflow-hidden bg-white/80 backdrop-blur-sm border-2 border-purple-200">
+              <Card className="relative overflow-hidden bg-gradient-to-br from-purple-100 via-pink-50 to-purple-100 border-0">
                 <CardContent className="p-6">
                   <div className="text-center mb-6">
                     <h3 className="text-xl font-bold text-purple-600 mb-2">Gói Thường</h3>
@@ -143,12 +143,17 @@ export default function ScreenScanner() {
                     ))}
                   </ul>
 
-                  <Button className="w-full bg-purple-500 hover:bg-purple-600 text-white rounded-full">Thử ngay</Button>
+                  <Button
+                    className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-full"
+                    onClick={() => setActiveTab("demo")}>
+                    Thử ngay
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
                 </CardContent>
               </Card>
 
               {/* Premium Plan */}
-              <Card className="relative overflow-hidden bg-gradient-to-br from-purple-500 to-orange-400 text-white border-0">
+              <Card className="relative overflow-hidden bg-gradient-to-br from-purple-100 via-pink-50 to-purple-100 border-0">
                 <div className="absolute top-4 right-4 bg-yellow-400 text-purple-800 px-3 py-1 rounded-full text-xs font-bold">
                   Phổ biến
                 </div>
@@ -171,8 +176,14 @@ export default function ScreenScanner() {
                   </ul>
 
                   <Button
-                    className="w-full bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500 text-white rounded-full border-0"
-                    onClick={() => setShowPremiumUpgrade(true)}
+                    className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-full border-0"
+                    // onClick={() => setShowPremiumUpgrade(true)}
+                    onClick={() =>
+                      toast({
+                        title: "Thông báo",
+                        description: "Tính năng này đang được phát triển",
+                      })
+                    }
                   >
                     Nâng cấp ngay
                     <ArrowRight className="w-4 h-4 ml-2" />
